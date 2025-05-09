@@ -22,8 +22,11 @@ fun HomeScreen(
 ) {
     val dummyData by viewModel.dummyData.collectAsState()
 
+    val localData by viewModel.localData.collectAsState()
+
+
     LaunchedEffect(Unit) {
-        viewModel.dummyFun()
+        viewModel.dummyRemoteFun()
     }
 
     Column(
@@ -32,6 +35,8 @@ fun HomeScreen(
             .background(color = Color.White)
             .padding(innerPaddingValues)
     ) {
-        Text(text = "닉네임은 $dummyData")
+        Text(text = "서버에서 받아온 닉네임은 $dummyData")
+        Text(text = localData)
+
     }
 }

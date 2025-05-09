@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import com.example.myapplication.data.interceptor.ServicePool
+import com.example.myapplication.data.local.datasource.DummyLocalDataSource
+import com.example.myapplication.data.local.datasourceimpl.DummyLocalDataSourceImpl
 import com.example.myapplication.data.remote.datasourceimpl.DummyRemoteDataSourceImpl
 import com.example.myapplication.data.repositoryimpl.DummyRepositoryImpl
 import com.example.myapplication.presentation.home.HomeScreen
@@ -22,7 +24,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val remoteDataSource = DummyRemoteDataSourceImpl(service)
-        val repository = DummyRepositoryImpl(remoteDataSource)
+        val repository = DummyRepositoryImpl(remoteDataSource,DummyLocalDataSourceImpl(this))
 
         val viewModel = HomeViewModel(repository)
 

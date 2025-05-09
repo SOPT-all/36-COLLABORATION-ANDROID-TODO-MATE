@@ -4,4 +4,8 @@ import com.example.myapplication.domain.model.DummyData
 
 interface DummyRepository {
     suspend fun funName(userId: Long): Result<DummyData>
+
+    suspend fun setLocalUserNickname(nickname: String)
+
+    suspend fun getLocalUserNickname():String
 }
