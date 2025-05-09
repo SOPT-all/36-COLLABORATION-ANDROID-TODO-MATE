@@ -3,45 +3,38 @@ package com.example.myapplication.presentation.main
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import com.example.myapplication.data.interceptor.ServicePool
+import com.example.myapplication.data.remote.datasourceimpl.DummyRemoteDataSourceImpl
+import com.example.myapplication.data.repositoryimpl.DummyRepositoryImpl
+import com.example.myapplication.presentation.home.HomeScreen
+import com.example.myapplication.presentation.home.HomeViewModel
 import com.example.myapplication.ui.theme.MyApplicationTheme
 
 class MainActivity : ComponentActivity() {
+
+    private val service by lazy { ServicePool.dummyService }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+
+        val remoteDataSource = DummyRemoteDataSourceImpl(service)
+        val repository = DummyRepositoryImpl(remoteDataSource)
+
+        val viewModel = HomeViewModel(repository)
+
         setContent {
             MyApplicationTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
+                    HomeScreen(
+                        innerPaddingValues = innerPadding,
+                        viewModel = viewModel
                     )
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MyApplicationTheme {
-        Greeting("Android")
     }
 }
