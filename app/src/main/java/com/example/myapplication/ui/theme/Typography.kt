@@ -57,7 +57,7 @@ val cap_semi_10 = TextStyle(
     fontSize = 10.sp
 )
 
-val cap_medi_10 = TextStyle(
+val cap_med_10 = TextStyle(
     fontFamily = Pretendard,
     fontWeight = FontWeight.Medium,
     fontSize = 10.sp
