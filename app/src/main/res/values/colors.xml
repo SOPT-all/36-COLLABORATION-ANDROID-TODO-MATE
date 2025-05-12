@@ -1,10 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
+    <!-- mono tone -->
     <color name="white">#FFFFFFFF</color>
+    <color name="grey10">#FFF2F2F2</color>
+    <color name="grey20">#FFF2F3F5</color>
+    <color name="grey30">#FFE9EEF0</color>
+    <color name="grey40">#FFE9EEF2</color>
+    <color name="grey50">#FFD2D8DA</color>
+    <color name="grey60">#FFBCBCBC</color>
+    <color name="grey70">#FF727272</color>
+
+    <color name="bluegrey10">#FFCAD3DB</color>
+    <color name="bluegrey20">#FFA1A8B3</color>
+    <color name="bluegrey30">#FF959AA6</color>
+    <color name="bluegrey40">#FF7E90AB</color>
+
+    <color name="darkgrey10">#FF282828</color>
+    <color name="darkgrey20">#FF0D0D0D</color>
+    <color name="darkgrey30">#FF121212</color>
+    <color name="black">#FF000000</color>
+
+    <!-- category -->
+    <color name="green_category1">#FFF5CD47</color>
+    <color name="purple_category2">#FF797EF6</color>
+    <color name="blue_category3">#FF1AA7EC</color>
+
+    <!-- edit -->
+    <color name="red_delete">#FFFF5C5D</color>
+    <color name="blue_edit">#FF5483FF</color>
+    <color name="yellow_memo">#FFFFD71C</color>
+    <color name="pink_time">#FFF465E7</color>
+    <color name="purple_move">#FF696EF5</color>
+
+    <!-- others -->
+    <color name="yellow_smile">#FFF9E314</color>
+    <color name="red_heart">#FFFE7168</color>
+    <color name="red10">#FFFE0000</color>
+    <color name="blue_10">#FFDBF6FF</color>
+    <color name="blue_20">#FF007CFF</color>
+    <color name="gradient_ai_start">#FF38CBC9</color>
+    <color name="gradient_ai_end">#FF3D6AFF</color>
+    <color name="emerald_ai">#FF38CBC9</color>
+    <color name="gradient_ai02_start">#FF0029F7</color>
+    <color name="gradient_ai02_end">#FF00E550</color>
 </resources>
