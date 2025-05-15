@@ -24,6 +24,7 @@ data class TodomateTypography(
     val cap_bold_12: TextStyle,
     val cap_semi_12: TextStyle,
     val cap_med_12: TextStyle,
+    val cap_reg_12: TextStyle,
     val cap_semi_10: TextStyle,
     val cap_med_10: TextStyle,
     val cap_reg_10: TextStyle,
@@ -59,6 +60,11 @@ val defaultTodomateTypography = TodomateTypography(
     cap_med_12 = TextStyle(
         fontFamily = Pretendard,
         fontWeight = FontWeight.Medium,
+        fontSize = 12.sp
+    ),
+    cap_reg_12 = TextStyle(
+        fontFamily = Pretendard,
+        fontWeight = FontWeight.Normal,
         fontSize = 12.sp
     ),
     cap_semi_10 = TextStyle(
