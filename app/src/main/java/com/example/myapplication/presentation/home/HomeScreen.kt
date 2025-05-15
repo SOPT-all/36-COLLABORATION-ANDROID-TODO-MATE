@@ -3,6 +3,7 @@ package com.example.myapplication.presentation.home
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
@@ -13,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.myapplication.presentation.home.toolBox.ToolBarScreen
 
 @Composable
 fun HomeScreen(
@@ -37,6 +39,8 @@ fun HomeScreen(
     ) {
         Text(text = "서버에서 받아온 닉네임은 $dummyData")
         Text(text = localData)
+        Spacer(Modifier.weight(1f))
 
+        ToolBarScreen()
     }
 }
