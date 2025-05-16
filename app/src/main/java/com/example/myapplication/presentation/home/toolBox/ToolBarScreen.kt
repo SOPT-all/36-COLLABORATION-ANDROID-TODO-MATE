@@ -22,48 +22,49 @@ import com.example.myapplication.presentation.home.toolBox.component.ToolBarButt
 import com.example.myapplication.ui.theme.Grey10
 
 @Composable
-fun ToolBarScreen() {
+fun ToolBarScreen(isKeyBoardShown: Boolean) {
     var toolBarDetailButtonStatus by remember { mutableStateOf(ToolBarButtonStatus.ON) }
     var toolBarRoutineButtonStatus by remember { mutableStateOf(ToolBarButtonStatus.ON) }
     var toolBarImportanceButtonStatus by remember { mutableStateOf(ToolBarButtonStatus.ON) }
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(50.dp)
-            .background(color = Grey10, shape = RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp))
-            .padding(vertical = 9.dp)
-            .padding(start = 24.dp)
-
-    ) {
-        ToolBarButton(ToolBarButtonType.Details, toolBarDetailButtonStatus) {
-            when(toolBarDetailButtonStatus) {
-                ToolBarButtonStatus.ON -> {
-                    toolBarDetailButtonStatus = ToolBarButtonStatus.OFF
+    if(isKeyBoardShown) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp)
+                .background(color = Grey10, shape = RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp))
+                .padding(vertical = 9.dp)
+                .padding(start = 24.dp)
+        ) {
+            ToolBarButton(ToolBarButtonType.Details, toolBarDetailButtonStatus) {
+                when(toolBarDetailButtonStatus) {
+                    ToolBarButtonStatus.ON -> {
+                        toolBarDetailButtonStatus = ToolBarButtonStatus.OFF
+                    }
+                    else -> {}
                 }
-                else -> {}
             }
-        }
 
-        Spacer(Modifier.width(4.dp))
+            Spacer(Modifier.width(4.dp))
 
-        ToolBarButton(ToolBarButtonType.Routine, toolBarRoutineButtonStatus) {
-            when(toolBarRoutineButtonStatus) {
-                ToolBarButtonStatus.ON -> {
-                    toolBarRoutineButtonStatus = ToolBarButtonStatus.OFF
+            ToolBarButton(ToolBarButtonType.Routine, toolBarRoutineButtonStatus) {
+                when(toolBarRoutineButtonStatus) {
+                    ToolBarButtonStatus.ON -> {
+                        toolBarRoutineButtonStatus = ToolBarButtonStatus.OFF
+                    }
+                    else -> {}
                 }
-                else -> {}
             }
-        }
 
-        Spacer(Modifier.width(4.dp))
+            Spacer(Modifier.width(4.dp))
 
-        ToolBarButton(ToolBarButtonType.Importance, toolBarImportanceButtonStatus) {
-            when(toolBarImportanceButtonStatus) {
-                ToolBarButtonStatus.ON -> {
-                    toolBarImportanceButtonStatus = ToolBarButtonStatus.OFF
+            ToolBarButton(ToolBarButtonType.Importance, toolBarImportanceButtonStatus) {
+                when(toolBarImportanceButtonStatus) {
+                    ToolBarButtonStatus.ON -> {
+                        toolBarImportanceButtonStatus = ToolBarButtonStatus.OFF
+                    }
+                    else -> {}
                 }
-                else -> {}
             }
         }
     }

@@ -1,11 +1,17 @@
 package com.example.myapplication.presentation.home
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
@@ -13,6 +19,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -37,11 +47,16 @@ fun HomeScreen(
     val context = LocalContext.current
     val activity = context.findActivity() as MainActivity
 
+    var keyBoardShown by remember { mutableStateOf(false) }
+
     keyboardVisibilityUtils = KeyboardVisibilityUtils(
         window = activity.window,
-        onShowKeyboard = {  },
+        onShowKeyboard = {
+            keyBoardShown = true
+        },
         onHideKeyboard = {
             focusManager.clearFocus()
+            keyBoardShown = false
         }
     )
 
@@ -50,18 +65,26 @@ fun HomeScreen(
             .fillMaxSize()
             .background(color = Color.White)
             .padding(innerPaddingValues)
-            .addFocusCleaner(focusManager),
+            .addFocusCleaner(focusManager)
     ) {
         item {
-            Spacer(Modifier.height(200.dp))
+            Spacer(Modifier.height(20.dp))
         }
 
         item {
             CategoryScreen()
         }
+    }
 
-        item {
-            ToolBarScreen()
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(bottom = if (keyBoardShown) WindowInsets.ime.asPaddingValues().calculateBottomPadding() else 0.dp)
+    ) {
+        Box(
+            modifier.align(Alignment.BottomCenter)
+        ) {
+            ToolBarScreen(keyBoardShown)
         }
     }
 }
