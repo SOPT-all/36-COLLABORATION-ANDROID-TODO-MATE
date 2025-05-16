@@ -6,4 +6,9 @@
     <string name="toolbar_routine">루틴등록</string>
     <string name="toolbar_importance">중요도</string>
 
+    <!-- Category -->
+    <string name="category1_title">카테고리 1</string>
+    <string name="category2_title">카테고리 2</string>
+    <string name="category3_title">카테고리 3</string>
+
 </resources>
