@@ -7,6 +7,7 @@
     <string name="icon_dm">icon_dm</string>
     <string name="icon_menu">icon_menu</string>
     <string name="icon_profile">icon_profile</string>
+    <string name="icon_aiplus">icon_aiplus</string>
 
     <!--    people box -->
     <string name="profile_name">me</string>
