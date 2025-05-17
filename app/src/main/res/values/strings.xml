@@ -11,4 +11,10 @@
     <string name="category2_title">카테고리 2</string>
     <string name="category3_title">카테고리 3</string>
 
+    <!-- MainBottomBar -->
+    <string name="bottombar_feed">피드</string>
+    <string name="bottombar_explore">둘러보기</string>
+    <string name="bottombar_noti">알림</string>
+    <string name="bottombar_my">My</string>
+
 </resources>

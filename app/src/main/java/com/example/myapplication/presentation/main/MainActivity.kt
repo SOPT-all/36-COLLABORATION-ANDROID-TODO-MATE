@@ -12,6 +12,7 @@ import com.example.myapplication.data.remote.datasourceimpl.DummyRemoteDataSourc
 import com.example.myapplication.data.repositoryimpl.DummyRepositoryImpl
 import com.example.myapplication.presentation.home.HomeScreen
 import com.example.myapplication.presentation.home.HomeViewModel
+import com.example.myapplication.presentation.main.component.MainBottomBar
 import com.example.myapplication.ui.theme.TodomateTheme
 
 class MainActivity : ComponentActivity() {
@@ -29,7 +30,11 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             TodomateTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Scaffold(modifier = Modifier.fillMaxSize(),
+                    bottomBar = {
+                        MainBottomBar()
+                    }
+                ) { innerPadding ->
                     HomeScreen(
                         innerPaddingValues = innerPadding,
                         viewModel = viewModel
