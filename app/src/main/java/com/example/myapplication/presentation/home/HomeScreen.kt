@@ -24,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -49,6 +50,8 @@ fun HomeScreen(
 
     var keyBoardShown by remember { mutableStateOf(false) }
 
+    val addCate1SubTaskFlow by viewModel.addCate1SubTaskFlow.collectAsState(null)
+
     keyboardVisibilityUtils = KeyboardVisibilityUtils(
         window = activity.window,
         onShowKeyboard = {
@@ -59,6 +62,13 @@ fun HomeScreen(
             keyBoardShown = false
         }
     )
+
+    LaunchedEffect(addCate1SubTaskFlow) {
+        if(addCate1SubTaskFlow == null) return@LaunchedEffect
+
+        focusManager.clearFocus()
+        keyBoardShown = false
+    }
 
     LazyColumn(
         modifier = modifier
@@ -72,7 +82,7 @@ fun HomeScreen(
         }
 
         item {
-            CategoryScreen()
+            CategoryScreen(viewModel)
         }
     }
 
@@ -84,7 +94,7 @@ fun HomeScreen(
         Box(
             modifier.align(Alignment.BottomCenter)
         ) {
-            ToolBarScreen(keyBoardShown)
+            ToolBarScreen(viewModel, keyBoardShown)
         }
     }
 }

@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myapplication.R
+import com.example.myapplication.presentation.util.compose.noRippleClickable
 import com.example.myapplication.ui.theme.BlueGrey10
 import com.example.myapplication.ui.theme.BlueGrey40
 import com.example.myapplication.ui.theme.LocalTodomateTypographyProvider
@@ -63,14 +64,14 @@ fun ToolBarButton(
 
     when(status) {
         ToolBarButtonStatus.ON -> {
-            backgroundColor = BlueGrey10
-            iconColor = BlueGrey40
-            titleColor = BlueGrey40
-        }
-        ToolBarButtonStatus.OFF -> {
             backgroundColor = BlueGrey40
             iconColor = White
             titleColor = White
+        }
+        ToolBarButtonStatus.OFF -> {
+            backgroundColor = BlueGrey10
+            iconColor = BlueGrey40
+            titleColor = BlueGrey40
         }
         ToolBarButtonStatus.UNAVAILABLE -> {
             backgroundColor = BlueGrey10
@@ -87,10 +88,10 @@ fun ToolBarButton(
             .background(
                 color = backgroundColor,
                 shape = RoundedCornerShape(25.dp))
-            .padding(vertical = 7.dp, horizontal = 12.dp)
-            .clickable {
+            .noRippleClickable {
                 onClickCallback.invoke()
-            },
+            }
+            .padding(vertical = 7.dp, horizontal = 12.dp),
         verticalAlignment = CenterVertically
     ) {
         Icon(

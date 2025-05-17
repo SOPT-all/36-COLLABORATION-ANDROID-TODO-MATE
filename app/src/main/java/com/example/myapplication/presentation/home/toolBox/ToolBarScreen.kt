@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,17 +22,38 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.myapplication.R
+import com.example.myapplication.presentation.home.HomeViewModel
 import com.example.myapplication.presentation.home.toolBox.component.ToolBarButton
 import com.example.myapplication.presentation.home.toolBox.component.ToolBarButtonStatus
 import com.example.myapplication.presentation.home.toolBox.component.ToolBarButtonType
 import com.example.myapplication.ui.theme.Grey10
 
 @Composable
-fun ToolBarScreen(isKeyBoardShown: Boolean) {
+fun ToolBarScreen(
+    viewModel: HomeViewModel,
+    isKeyBoardShown: Boolean
+) {
     var toolBarDetailButtonStatus by remember { mutableStateOf(ToolBarButtonStatus.ON) }
     var toolBarRoutineButtonStatus by remember { mutableStateOf(ToolBarButtonStatus.ON) }
     var toolBarImportanceButtonStatus by remember { mutableStateOf(ToolBarButtonStatus.ON) }
+
+    val task1IsBlank by viewModel.cate1TaskBlank.collectAsStateWithLifecycle()
+    val task2IsBlank by viewModel.cate1TaskBlank.collectAsStateWithLifecycle()
+    val task3IsBlank by viewModel.cate1TaskBlank.collectAsStateWithLifecycle()
+
+    LaunchedEffect(task1IsBlank) {
+        if(task1IsBlank) {
+            toolBarDetailButtonStatus = ToolBarButtonStatus.UNAVAILABLE
+            toolBarRoutineButtonStatus = ToolBarButtonStatus.UNAVAILABLE
+            toolBarImportanceButtonStatus = ToolBarButtonStatus.UNAVAILABLE
+        } else {
+            toolBarDetailButtonStatus = ToolBarButtonStatus.OFF
+            toolBarRoutineButtonStatus = ToolBarButtonStatus.OFF
+            toolBarImportanceButtonStatus = ToolBarButtonStatus.OFF
+        }
+    }
 
     if(isKeyBoardShown) {
         Row(
@@ -44,8 +66,9 @@ fun ToolBarScreen(isKeyBoardShown: Boolean) {
         ) {
             ToolBarButton(ToolBarButtonType.Details, toolBarDetailButtonStatus) {
                 when(toolBarDetailButtonStatus) {
-                    ToolBarButtonStatus.ON -> {
-                        toolBarDetailButtonStatus = ToolBarButtonStatus.OFF
+                    ToolBarButtonStatus.OFF -> {
+                        toolBarDetailButtonStatus = ToolBarButtonStatus.ON
+                        viewModel.addSubTaskLayout((viewModel.cate1TaskList.value.size))
                     }
                     else -> {}
                 }

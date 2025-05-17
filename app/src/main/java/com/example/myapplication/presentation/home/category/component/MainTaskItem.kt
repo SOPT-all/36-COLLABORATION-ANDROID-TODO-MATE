@@ -14,6 +14,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TextFieldDefaults.indicatorLine
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -27,12 +28,11 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.PlatformTextStyle
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.myapplication.R
+import com.example.myapplication.presentation.home.HomeViewModel
+import com.example.myapplication.presentation.util.compose.noRippleClickable
 import com.example.myapplication.ui.theme.BlueCategory3
 import com.example.myapplication.ui.theme.GreenCategory1
 import com.example.myapplication.ui.theme.LocalTodomateTypographyProvider
@@ -40,22 +40,63 @@ import com.example.myapplication.ui.theme.PurpleCategory2
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainTaskItem(cateName: String, categoryIdx: Int, finishEditCallback: (String) -> Unit) {
+fun MainTaskItem(
+    viewModel: HomeViewModel,
+    cateName: String,
+    categoryIdx: Int,
+    mainTaskIdx: Int,
+    finishEditCallback: (String) -> Unit
+) {
     val typoProvider = LocalTodomateTypographyProvider.current
     var cateValue by remember { mutableStateOf("") }
+
+    val addCate1SubTaskFlow by viewModel.addCate1SubTaskFlow.collectAsStateWithLifecycle(null)
+
+    var itemChecked by remember { mutableStateOf(false) }
+    var iconStatus by remember { mutableStateOf(R.drawable.icon_weekday_unchecked) }
 
     // TF
     val interactionSource = remember { MutableInteractionSource() }
     val focusRequester = remember { FocusRequester() }
     var focusState by remember { mutableStateOf(false) }
 
-    val detailCateList = remember { mutableStateListOf<String>() }
+    val subCateList = remember { mutableStateListOf<String>() }
 
     val categoryColor = when(categoryIdx) {
         0 -> GreenCategory1
         1 -> PurpleCategory2
         else -> BlueCategory3
     }
+
+    LaunchedEffect(cateValue) {
+        if (cateValue.isEmpty()) {
+            viewModel.taskIsBlank(true)
+        } else {
+            viewModel.taskIsBlank(false)
+        }
+    }
+
+    LaunchedEffect(addCate1SubTaskFlow) {
+        if(addCate1SubTaskFlow == null) return@LaunchedEffect
+        if(addCate1SubTaskFlow == mainTaskIdx) {
+            subCateList.add("")
+        }
+    }
+
+    LaunchedEffect(itemChecked) {
+        iconStatus = if(itemChecked) {
+            when(categoryIdx) {
+                0 -> R.drawable.icon_weekday_checked
+                1 -> R.drawable.icon_category2_checked
+                else -> R.drawable.icon_category3_checked
+            }
+        } else {
+            R.drawable.icon_weekday_unchecked
+        }
+
+
+    }
+
 
 
     Column {
@@ -65,10 +106,14 @@ fun MainTaskItem(cateName: String, categoryIdx: Int, finishEditCallback: (String
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                imageVector = ImageVector.vectorResource(id = R.drawable.icon_weekday_unchecked),
+                imageVector = ImageVector.vectorResource(id = iconStatus),
                 contentDescription = null,
                 tint = Color.Unspecified,
-                modifier = Modifier.size(20.dp)
+                modifier = Modifier
+                    .size(20.dp)
+                    .noRippleClickable {
+                        itemChecked = !itemChecked
+                    }
             )
 
             Spacer(modifier = Modifier.width(8.dp))
@@ -96,7 +141,7 @@ fun MainTaskItem(cateName: String, categoryIdx: Int, finishEditCallback: (String
                     )
                     .onFocusChanged {
                         focusState = it.isFocused
-                        if (!it.isFocused) {
+                        if (!it.isFocused && cateValue.isNotEmpty()) {
                             finishEditCallback(cateValue)
                         }
                     }
@@ -106,13 +151,9 @@ fun MainTaskItem(cateName: String, categoryIdx: Int, finishEditCallback: (String
 
         Spacer(Modifier.height(8.dp))
 
-        if (!focusState && cateValue.isNotEmpty() && detailCateList.isEmpty()) {
-            detailCateList.add("")
-        }
-
-        detailCateList.forEachIndexed { index, _ ->
-            SubTaskItem(detailCateList[index], categoryIdx) { editText ->
-                detailCateList[index] = editText
+        subCateList.forEachIndexed { index, _ ->
+            SubTaskItem(subCateList[index], categoryIdx) { editText ->
+                subCateList[index] = editText
             }
         }
     }

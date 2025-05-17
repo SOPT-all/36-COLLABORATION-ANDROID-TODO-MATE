@@ -1,5 +1,6 @@
 package com.example.myapplication.presentation.home.category.component
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -12,6 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -22,6 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.R
+import com.example.myapplication.presentation.home.HomeViewModel
 import com.example.myapplication.ui.theme.BlueCategory3
 import com.example.myapplication.ui.theme.GreenCategory1
 import com.example.myapplication.ui.theme.Grey10
@@ -29,7 +32,7 @@ import com.example.myapplication.ui.theme.LocalTodomateTypographyProvider
 import com.example.myapplication.ui.theme.PurpleCategory2
 
 @Composable
-fun CategoryItem(categoryIdx: Int) {
+fun CategoryItem(categoryIdx: Int, viewModel: HomeViewModel) {
     val typoProvider = LocalTodomateTypographyProvider.current
 
     val cateList = remember { mutableStateListOf<String>() }
@@ -90,8 +93,14 @@ fun CategoryItem(categoryIdx: Int) {
     Spacer(modifier = Modifier.height(4.dp))
 
     cateList.forEachIndexed { index, _ ->
-        MainTaskItem(cateList[index], categoryIdx) { editText ->
+        MainTaskItem(
+            viewModel = viewModel,
+            cateName = cateList[index],
+            categoryIdx = categoryIdx,
+            mainTaskIdx = index
+        ) { editText ->
             cateList[index] = editText
+            viewModel.addMainTask(cateList[index])
         }
     }
 }
