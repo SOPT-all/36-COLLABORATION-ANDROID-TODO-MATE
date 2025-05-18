@@ -9,7 +9,16 @@
     <string name="icon_profile">icon_profile</string>
     <string name="icon_aiplus">icon_aiplus</string>
     <string name="icon_weekday">icon_weekday</string>
+    <string name="icon_check">icon_check</string>
+    <string name="icon_smile">icon_smile</string>
+    <string name="icon_heart">icon_hear</string>
+    <string name="ic_moveleft">ic_moveleft</string>
+    <string name="ic_moveright">ic_moveright</string>
 
     <!--    people box -->
     <string name="profile_name">me</string>
+
+    <!--    calendar    -->
+    <string name="year_and_month">%s년 %s월</string>
+    <string name="week">주</string>
 </resources>
