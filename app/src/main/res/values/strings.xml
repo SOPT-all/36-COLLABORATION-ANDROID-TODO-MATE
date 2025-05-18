@@ -8,6 +8,7 @@
     <string name="icon_menu">icon_menu</string>
     <string name="icon_profile">icon_profile</string>
     <string name="icon_aiplus">icon_aiplus</string>
+    <string name="icon_weekday">icon_weekday</string>
 
     <!--    people box -->
     <string name="profile_name">me</string>
