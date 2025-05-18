@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -28,9 +27,9 @@ import com.example.myapplication.ui.theme.DarkGrey10
 import com.example.myapplication.ui.theme.Grey10
 import com.example.myapplication.ui.theme.LocalTodomateTypographyProvider
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CalendarTitleComponent(
+    modifier: Modifier = Modifier,
     yearText: Int,
     monthText: Int,
     totalDoneTaskNum: Int = 0,
@@ -42,7 +41,7 @@ fun CalendarTitleComponent(
     val typography = LocalTodomateTypographyProvider.current
 
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(

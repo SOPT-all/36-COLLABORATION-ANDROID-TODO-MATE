@@ -23,13 +23,14 @@ import com.example.myapplication.ui.theme.LocalTodomateTypographyProvider
 
 @Composable
 fun ProfileBoxComponent(
+    modifier: Modifier = Modifier,
     imageId: Int,
     nameId: Int
 ) {
     val typography = LocalTodomateTypographyProvider.current
 
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
