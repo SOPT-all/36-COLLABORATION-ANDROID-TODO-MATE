@@ -116,18 +116,3 @@ enum class RepeatCycle(val displayName: String) {
     MONTHLY("매월"),
     YEARLY("매년")
 }
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewRepeatCycleSelector() {
-    var selected by remember { mutableStateOf<RepeatCycle?>(null) }
-
-    RepeatCycleSelector(
-        selected = selected,
-        onSelect = { selected = it },
-        onLeftClick = { },
-        onConfirmClick = { }
-    )
-}
-
-

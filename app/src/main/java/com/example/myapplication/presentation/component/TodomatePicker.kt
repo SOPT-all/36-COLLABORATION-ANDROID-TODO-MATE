@@ -206,17 +206,3 @@ fun calculateWidth(items: List<String>, textStyle: TextStyle): Dp {
         result.size.width.toDp() + 20.dp
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun TodomateDatePickerPreview() {
-    TodomateTheme {
-        TodomatePickerContainer(
-            title = "시작 날짜",
-            onLeftClick = {},
-            onRightClick = {},
-            showLeftButton = true,
-            showRightButton = true
-        )
-    }
-}

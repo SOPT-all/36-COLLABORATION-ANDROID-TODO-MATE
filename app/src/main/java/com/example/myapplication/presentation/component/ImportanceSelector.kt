@@ -119,17 +119,3 @@ enum class ImportanceCycle(val displayName: String, val rightIconResId: Int) {
     MIDDLE("중", R.drawable.ic_importance_middle),
     LOWER("하", R.drawable.ic_importance_lower)
 }
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewImportanceSelector() {
-    var selected by remember { mutableStateOf<ImportanceCycle?>(null) }
-
-    ImportanceSelector(
-        selected = selected,
-        onSelect = { selected = it },
-        onLeftClick = { },
-        onConfirmClick = { }
-    )
-}
-
