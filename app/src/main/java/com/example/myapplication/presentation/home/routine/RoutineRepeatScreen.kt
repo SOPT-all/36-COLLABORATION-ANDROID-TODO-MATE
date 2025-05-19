@@ -6,16 +6,19 @@ import com.example.myapplication.presentation.component.RepeatCycleSelector
 
 @Composable
 fun RoutineRepeatScreen(
-    selected: RepeatCycle,
-    onSelect: (RepeatCycle) -> Unit,
     onLeftClick: () -> Unit,
-    onConfirmClick: () -> Unit
+    onConfirmClick: (RepeatCycle) -> Unit
 ) {
+    var selected by remember { mutableStateOf<RepeatCycle?>(null) }
+
     RepeatCycleSelector(
         selected = selected,
-        onSelect = onSelect,
+        onSelect = { selected = it },
         onLeftClick = onLeftClick,
-        onConfirmClick = onConfirmClick
+        onConfirmClick = {
+            selected?.let { onConfirmClick(it) }
+        }
     )
 }
+
 

@@ -14,7 +14,7 @@ fun RoutineScreen() {
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { 3 })
     val coroutineScope = rememberCoroutineScope()
 
-    var selectedCycle by remember { mutableStateOf(RepeatCycle.DAILY) }
+    var selectedCycle by remember { mutableStateOf<RepeatCycle?>(null) }
 
     HorizontalPager(
         state = pagerState,
@@ -42,14 +42,16 @@ fun RoutineScreen() {
                 }
             )
             2 -> RoutineRepeatScreen(
-                selected = selectedCycle,
-                onSelect = { selectedCycle = it },
                 onLeftClick = {
                     coroutineScope.launch {
                         pagerState.animateScrollToPage(1)
                     }
                 },
-                onConfirmClick = {}
+                onConfirmClick = {
+                    selectedCycle?.let { cycle ->
+                        // 완료
+                    }
+                }
             )
         }
     }

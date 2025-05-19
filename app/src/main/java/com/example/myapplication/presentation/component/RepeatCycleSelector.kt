@@ -20,12 +20,14 @@ import com.example.myapplication.ui.theme.LocalTodomateTypographyProvider
 
 @Composable
 fun RepeatCycleSelector(
-    selected: RepeatCycle,
+    selected: RepeatCycle?,
     onSelect: (RepeatCycle) -> Unit,
     onLeftClick: () -> Unit,
     onConfirmClick: () -> Unit
 ) {
     val typography = LocalTodomateTypographyProvider.current
+    val colors = LocalTodomateColorsProvider.current
+    val isConfirmEnabled = selected != null
 
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -54,12 +56,16 @@ fun RepeatCycleSelector(
             Text(
                 text = "완료",
                 modifier = Modifier
+                    .padding(horizontal = 12.dp)
                     .clickable(
+                        enabled = isConfirmEnabled,
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null
-                    ) { onConfirmClick() }
-                    .padding(horizontal = 12.dp),
-                style = typography.cap_med_12
+                    ) {
+                        if (isConfirmEnabled) onConfirmClick()
+                    },
+                style = typography.cap_med_12,
+                color = if (isConfirmEnabled) colors.DarkGrey10 else colors.BlueGrey40
             )
         }
 
@@ -73,11 +79,11 @@ fun RepeatCycleSelector(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 24.dp, vertical = 3.dp)
-                        .background(color = LocalTodomateColorsProvider.current.Grey20)
+                        .background(color = colors.Grey20)
                         .clickable(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null
-                        ){ onSelect(cycle) }
+                        ) { onSelect(cycle) }
                         .padding(horizontal = 16.dp, vertical = 8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -102,6 +108,7 @@ fun RepeatCycleSelector(
     }
 }
 
+
 enum class RepeatCycle(val displayName: String) {
     DAILY("매일"),
     WEEKLY("매주"),
@@ -113,13 +120,14 @@ enum class RepeatCycle(val displayName: String) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewRepeatCycleSelector() {
-    var selected by remember { mutableStateOf(RepeatCycle.DAILY) }
+    var selected by remember { mutableStateOf<RepeatCycle?>(null) }
 
     RepeatCycleSelector(
         selected = selected,
         onSelect = { selected = it },
-        onLeftClick = { /* 뒤로 가기 */ },
-        onConfirmClick = { /* 완료 */ }
+        onLeftClick = { },
+        onConfirmClick = { }
     )
 }
+
 
