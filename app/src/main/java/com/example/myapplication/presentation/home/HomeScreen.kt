@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -26,15 +27,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
+import com.example.myapplication.presentation.custom.DashLine
 import com.example.myapplication.presentation.home.category.CategoryScreen
 import com.example.myapplication.presentation.home.category.addFocusCleaner
+import com.example.myapplication.presentation.home.etc.EtcScreen
 import com.example.myapplication.presentation.home.toolBox.ToolBarScreen
 import com.example.myapplication.presentation.main.MainActivity
 import com.example.myapplication.presentation.util.compose.findActivity
 import com.example.myapplication.presentation.util.keyboard.KeyboardVisibilityUtils
+import com.example.myapplication.ui.theme.Grey50
 
 private lateinit var keyboardVisibilityUtils: KeyboardVisibilityUtils
 
@@ -83,6 +88,21 @@ fun HomeScreen(
 
         item {
             CategoryScreen(viewModel)
+        }
+
+        item {
+            Box(
+                Modifier
+                    .padding(horizontal = 24.dp)
+                    .padding(top = 22.dp)
+            ) {
+                DashLine()
+            }
+
+        }
+
+        item {
+            EtcScreen()
         }
     }
 
