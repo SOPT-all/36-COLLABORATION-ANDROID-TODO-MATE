@@ -1,4 +1,4 @@
-package com.example.myapplication.presentation.home.calender
+package com.example.myapplication.presentation.home.calender.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

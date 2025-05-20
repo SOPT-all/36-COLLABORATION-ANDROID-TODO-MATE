@@ -14,6 +14,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.R
+import com.example.myapplication.presentation.home.calender.component.CalendarTitleComponent
+import com.example.myapplication.presentation.home.calender.component.DayItemComponent
 import com.example.myapplication.presentation.home.profile.PeopleBoxItemComponent
 import com.example.myapplication.presentation.home.profile.ProfileBoxComponent
 import java.time.DayOfWeek
