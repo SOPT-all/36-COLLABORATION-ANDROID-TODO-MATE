@@ -1,4 +1,4 @@
-package com.example.myapplication.presentation.home.calender
+package com.example.myapplication.presentation.home.calender.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -23,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.R
+import com.example.myapplication.presentation.home.calender.Weekday
 import com.example.myapplication.ui.theme.Black
 import com.example.myapplication.ui.theme.Blue20
 import com.example.myapplication.ui.theme.DarkGrey30
