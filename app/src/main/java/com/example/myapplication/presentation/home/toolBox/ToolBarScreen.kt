@@ -91,8 +91,6 @@ fun ToolBarScreen(
                 .padding(vertical = 9.dp)
                 .padding(start = 24.dp)
         ) {
-            if(subTaskIdx < 0) toolBarDetailButtonStatus = ToolBarButtonStatus.OFF
-
             ToolBarButton(ToolBarButtonType.Details, toolBarDetailButtonStatus) {
                 when(toolBarDetailButtonStatus) {
                     ToolBarButtonStatus.OFF -> {
@@ -108,8 +106,8 @@ fun ToolBarScreen(
 
             ToolBarButton(ToolBarButtonType.Routine, toolBarRoutineButtonStatus) {
                 when(toolBarRoutineButtonStatus) {
-                    ToolBarButtonStatus.ON -> {
-                        toolBarRoutineButtonStatus = ToolBarButtonStatus.OFF
+                    ToolBarButtonStatus.OFF -> {
+                        toolBarRoutineButtonStatus = ToolBarButtonStatus.ON
                     }
                     else -> {}
                 }
@@ -119,8 +117,8 @@ fun ToolBarScreen(
 
             ToolBarButton(ToolBarButtonType.Importance, toolBarImportanceButtonStatus) {
                 when(toolBarImportanceButtonStatus) {
-                    ToolBarButtonStatus.ON -> {
-                        toolBarImportanceButtonStatus = ToolBarButtonStatus.OFF
+                    ToolBarButtonStatus.OFF -> {
+                        toolBarImportanceButtonStatus = ToolBarButtonStatus.ON
                     }
                     else -> {}
                 }
