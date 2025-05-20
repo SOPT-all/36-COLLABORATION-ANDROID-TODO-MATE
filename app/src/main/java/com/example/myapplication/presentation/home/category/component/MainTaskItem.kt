@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
@@ -62,7 +63,7 @@ fun MainTaskItem(
 
     val subCateList = remember { mutableStateListOf<String>() }
 
-    val categoryColor = when(categoryIdx) {
+    val categoryColor = when (categoryIdx) {
         0 -> GreenCategory1
         1 -> PurpleCategory2
         else -> BlueCategory3
@@ -71,8 +72,8 @@ fun MainTaskItem(
     // add collect
     LaunchedEffect(Unit) {
         viewModel.addCate1SubTaskFlow.collect {
-            if(it == null) return@collect
-            if(it.first == categoryIdx &&it.second == mainTaskIdx && subCateList.size < 5) {
+            if (it == null) return@collect
+            if (it.first == categoryIdx && it.second == mainTaskIdx && subCateList.size < 5) {
                 subCateList.add("")
             }
         }
@@ -80,8 +81,8 @@ fun MainTaskItem(
 
     LaunchedEffect(Unit) {
         viewModel.addCate2SubTaskFlow.collect {
-            if(it == null) return@collect
-            if(it.first == categoryIdx &&it.second == mainTaskIdx && subCateList.size < 5) {
+            if (it == null) return@collect
+            if (it.first == categoryIdx && it.second == mainTaskIdx && subCateList.size < 5) {
                 subCateList.add("")
             }
         }
@@ -89,8 +90,8 @@ fun MainTaskItem(
 
     LaunchedEffect(Unit) {
         viewModel.addCate3SubTaskFlow.collect {
-            if(it == null) return@collect
-            if(it.first == categoryIdx &&it.second == mainTaskIdx && subCateList.size < 5) {
+            if (it == null) return@collect
+            if (it.first == categoryIdx && it.second == mainTaskIdx && subCateList.size < 5) {
                 subCateList.add("")
             }
         }
@@ -127,9 +128,9 @@ fun MainTaskItem(
     // check collect
     LaunchedEffect(Unit) {
         viewModel.cate1MainTaskChecked.collect {
-            if(it == null) return@collect
+            if (it == null) return@collect
 
-            if(it.first == mainTaskIdx) {
+            if (it.first == mainTaskIdx) {
                 itemChecked = it.second
             }
         }
@@ -137,9 +138,9 @@ fun MainTaskItem(
 
     LaunchedEffect(Unit) {
         viewModel.cate2MainTaskChecked.collect {
-            if(it == null) return@collect
+            if (it == null) return@collect
 
-            if(it.first == mainTaskIdx) {
+            if (it.first == mainTaskIdx) {
                 itemChecked = it.second
             }
         }
@@ -147,9 +148,9 @@ fun MainTaskItem(
 
     LaunchedEffect(Unit) {
         viewModel.cate3MainTaskChecked.collect {
-            if(it == null) return@collect
+            if (it == null) return@collect
 
-            if(it.first == mainTaskIdx) {
+            if (it.first == mainTaskIdx) {
                 itemChecked = it.second
             }
         }
@@ -165,8 +166,8 @@ fun MainTaskItem(
     }
 
     LaunchedEffect(itemChecked) {
-        iconStatus = if(itemChecked) {
-            when(categoryIdx) {
+        iconStatus = if (itemChecked) {
+            when (categoryIdx) {
                 0 -> R.drawable.icon_weekday_checked
                 1 -> R.drawable.icon_category2_checked
                 else -> R.drawable.icon_category3_checked
@@ -179,7 +180,8 @@ fun MainTaskItem(
     Column {
         Row(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .padding(top = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
@@ -189,7 +191,7 @@ fun MainTaskItem(
                 modifier = Modifier
                     .size(20.dp)
                     .noRippleClickable {
-                        if(!focusState) {
+                        if (!focusState) {
                             itemChecked = !itemChecked
                             viewModel.checkMainTask(categoryIdx, mainTaskIdx, itemChecked)
                         }
@@ -213,7 +215,7 @@ fun MainTaskItem(
                         interactionSource = interactionSource,
                         colors = TextFieldDefaults.colors(
                             unfocusedIndicatorColor =
-                                if(focusState || cateValue.isEmpty()) {
+                                if (focusState || cateValue.isEmpty()) {
                                     categoryColor
                                 } else {
                                     Color.Transparent
@@ -222,7 +224,7 @@ fun MainTaskItem(
                     )
                     .onFocusChanged {
                         focusState = it.isFocused
-                        if(it.isFocused) {
+                        if (it.isFocused) {
                             viewModel.focusOnTask(categoryIdx, mainTaskIdx)
                         }
                         if (!it.isFocused && cateValue.isNotEmpty()) {

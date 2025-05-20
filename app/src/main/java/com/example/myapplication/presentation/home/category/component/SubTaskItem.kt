@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
@@ -71,7 +72,7 @@ fun SubTaskItem(
     val focusRequester = remember { FocusRequester() }
     var focusState by remember { mutableStateOf(false) }
 
-    val categoryColor = when(categoryIdx) {
+    val categoryColor = when (categoryIdx) {
         0 -> GreenCategory1
         1 -> PurpleCategory2
         else -> BlueCategory3
@@ -79,9 +80,9 @@ fun SubTaskItem(
 
     LaunchedEffect(Unit) {
         viewModel.cate1SubTaskChecked.collect {
-            if(it == null) return@collect
+            if (it == null) return@collect
 
-            if(it.first == mainTaskIdx && it.second == subTaskIdx) {
+            if (it.first == mainTaskIdx && it.second == subTaskIdx) {
                 itemChecked = it.third
             }
         }
@@ -89,9 +90,9 @@ fun SubTaskItem(
 
     LaunchedEffect(Unit) {
         viewModel.cate2SubTaskChecked.collect {
-            if(it == null) return@collect
+            if (it == null) return@collect
 
-            if(it.first == mainTaskIdx && it.second == subTaskIdx) {
+            if (it.first == mainTaskIdx && it.second == subTaskIdx) {
                 itemChecked = it.third
             }
         }
@@ -99,17 +100,17 @@ fun SubTaskItem(
 
     LaunchedEffect(Unit) {
         viewModel.cate3SubTaskChecked.collect {
-            if(it == null) return@collect
+            if (it == null) return@collect
 
-            if(it.first == mainTaskIdx && it.second == subTaskIdx) {
+            if (it.first == mainTaskIdx && it.second == subTaskIdx) {
                 itemChecked = it.third
             }
         }
     }
 
     LaunchedEffect(itemChecked) {
-        iconStatus = if(itemChecked) {
-            when(categoryIdx) {
+        iconStatus = if (itemChecked) {
+            when (categoryIdx) {
                 0 -> R.drawable.icon_weekday_checked
                 1 -> R.drawable.icon_category2_checked
                 else -> R.drawable.icon_category3_checked
@@ -120,7 +121,7 @@ fun SubTaskItem(
     }
 
     LaunchedEffect(subCateValue) {
-        if(hasBeenContentChanged == false) {
+        if (hasBeenContentChanged == false) {
             hasBeenContentChanged = subCateValue.isNotEmpty()
         }
     }
@@ -128,7 +129,8 @@ fun SubTaskItem(
 
     Row(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(top = 8.dp),
     ) {
         Spacer(modifier = Modifier.width(24.dp))
 
@@ -148,9 +150,14 @@ fun SubTaskItem(
                     modifier = Modifier
                         .size(16.dp)
                         .noRippleClickable {
-                            if(!focusState) {
+                            if (!focusState) {
                                 itemChecked = !itemChecked
-                                viewModel.checkSubTask(categoryIdx, mainTaskIdx, subTaskIdx, itemChecked)
+                                viewModel.checkSubTask(
+                                    categoryIdx,
+                                    mainTaskIdx,
+                                    subTaskIdx,
+                                    itemChecked
+                                )
                             }
                         }
                 )
@@ -165,7 +172,7 @@ fun SubTaskItem(
                     textStyle = typoProvider.cap_reg_10,
                     keyboardActions = KeyboardActions(
                         onDone = {
-                            if(subCateValue.isEmpty()) return@KeyboardActions
+                            if (subCateValue.isEmpty()) return@KeyboardActions
 
                             viewModel.addSubTaskLayout(mainTaskIdx = mainTaskIdx, categoryIdx)
                         }
@@ -183,13 +190,13 @@ fun SubTaskItem(
                             )
                         )
                         .onFocusChanged {
-                            if(isFirstEnterAndFocus) {
+                            if (isFirstEnterAndFocus) {
                                 isFirstEnterAndFocus = false
                                 return@onFocusChanged
                             }
 
                             focusState = it.isFocused
-                            if(it.isFocused) {
+                            if (it.isFocused) {
                                 viewModel.focusOnTask(categoryIdx, mainTaskIdx, subTaskIdx)
                             } else {
                                 finishEditCallback(subCateValue)
@@ -202,7 +209,7 @@ fun SubTaskItem(
 
             Spacer(Modifier.height(4.dp))
 
-            if(focusState || subCateValue.isEmpty()) {
+            if (focusState || subCateValue.isEmpty()) {
                 HorizontalDivider(thickness = 1.dp, color = categoryColor)
             }
 
