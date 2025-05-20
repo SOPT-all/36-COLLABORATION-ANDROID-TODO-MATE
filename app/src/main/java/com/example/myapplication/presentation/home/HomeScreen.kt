@@ -1,18 +1,47 @@
 package com.example.myapplication.presentation.home
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
+import com.example.myapplication.presentation.custom.DashLine
+import com.example.myapplication.presentation.home.category.CategoryScreen
+import com.example.myapplication.presentation.home.category.addFocusCleaner
+import com.example.myapplication.presentation.home.etc.EtcScreen
+import com.example.myapplication.presentation.home.toolBox.ToolBarScreen
+import com.example.myapplication.presentation.main.MainActivity
+import com.example.myapplication.presentation.util.compose.findActivity
+import com.example.myapplication.presentation.util.keyboard.KeyboardVisibilityUtils
+import com.example.myapplication.ui.theme.Grey50
+
+private lateinit var keyboardVisibilityUtils: KeyboardVisibilityUtils
 
 @Composable
 fun HomeScreen(
@@ -20,23 +49,72 @@ fun HomeScreen(
     viewModel: HomeViewModel,
     innerPaddingValues: PaddingValues = PaddingValues(0.dp)
 ) {
-    val dummyData by viewModel.dummyData.collectAsState()
+    val focusManager = LocalFocusManager.current
+    val context = LocalContext.current
+    val activity = context.findActivity() as MainActivity
 
-    val localData by viewModel.localData.collectAsState()
+    var keyBoardShown by remember { mutableStateOf(false) }
 
+    val addCate1SubTaskFlow by viewModel.addCate1SubTaskFlow.collectAsState(null)
 
-    LaunchedEffect(Unit) {
-        viewModel.dummyRemoteFun()
+    keyboardVisibilityUtils = KeyboardVisibilityUtils(
+        window = activity.window,
+        onShowKeyboard = {
+            keyBoardShown = true
+        },
+        onHideKeyboard = {
+            focusManager.clearFocus()
+            keyBoardShown = false
+        }
+    )
+
+    LaunchedEffect(addCate1SubTaskFlow) {
+        if(addCate1SubTaskFlow == null) return@LaunchedEffect
+
+        focusManager.clearFocus()
+        keyBoardShown = false
     }
 
-    Column(
+    LazyColumn(
         modifier = modifier
             .fillMaxSize()
             .background(color = Color.White)
             .padding(innerPaddingValues)
+            .addFocusCleaner(focusManager)
     ) {
-        Text(text = "서버에서 받아온 닉네임은 $dummyData")
-        Text(text = localData)
+        item {
+            Spacer(Modifier.height(20.dp))
+        }
 
+        item {
+            CategoryScreen(viewModel)
+        }
+
+        item {
+            Box(
+                Modifier
+                    .padding(horizontal = 24.dp)
+                    .padding(top = 22.dp)
+            ) {
+                DashLine()
+            }
+
+        }
+
+        item {
+            EtcScreen()
+        }
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(bottom = if (keyBoardShown) WindowInsets.ime.asPaddingValues().calculateBottomPadding() else 0.dp)
+    ) {
+        Box(
+            modifier.align(Alignment.BottomCenter)
+        ) {
+            ToolBarScreen(viewModel, keyBoardShown)
+        }
     }
 }
