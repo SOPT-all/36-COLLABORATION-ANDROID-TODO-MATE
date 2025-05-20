@@ -1,8 +1,7 @@
 package com.example.myapplication.presentation.home.routine
 
 import androidx.compose.runtime.*
-import com.example.myapplication.presentation.component.RepeatCycle
-import com.example.myapplication.presentation.component.RepeatCycleSelector
+import com.example.myapplication.presentation.home.routine.component.RepeatCycleSelector
 
 @Composable
 fun RoutineRepeatScreen(

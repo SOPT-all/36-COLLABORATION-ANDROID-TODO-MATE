@@ -5,8 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.example.myapplication.presentation.component.ImportanceCycle
-import com.example.myapplication.presentation.component.ImportanceSelector
+import com.example.myapplication.presentation.home.importance.component.ImportanceSelector
 
 @Composable
 fun ImportanceScreen(
