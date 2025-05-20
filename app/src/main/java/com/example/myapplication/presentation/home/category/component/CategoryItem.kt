@@ -100,7 +100,7 @@ fun CategoryItem(categoryIdx: Int, viewModel: HomeViewModel) {
             mainTaskIdx = index
         ) { editText ->
             cateList[index] = editText
-            viewModel.addMainTask(cateList[index])
+            viewModel.addMainTask(cateList[index], categoryIdx)
         }
     }
 }

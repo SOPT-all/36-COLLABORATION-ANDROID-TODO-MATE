@@ -1,5 +1,6 @@
 package com.example.myapplication.presentation.home.toolBox
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -33,18 +34,47 @@ import com.example.myapplication.ui.theme.Grey10
 @Composable
 fun ToolBarScreen(
     viewModel: HomeViewModel,
+    categoryIdx: Int,
+    mainTaskIdx: Int,
+    subTaskIdx: Int,
     isKeyBoardShown: Boolean
 ) {
+    Log.d("Logd", "categoryIdx: $categoryIdx, mainTaskIdx: $mainTaskIdx, subTaskIdx: $subTaskIdx targeted: $isKeyBoardShown")
+
     var toolBarDetailButtonStatus by remember { mutableStateOf(ToolBarButtonStatus.ON) }
     var toolBarRoutineButtonStatus by remember { mutableStateOf(ToolBarButtonStatus.ON) }
     var toolBarImportanceButtonStatus by remember { mutableStateOf(ToolBarButtonStatus.ON) }
 
     val task1IsBlank by viewModel.cate1TaskBlank.collectAsStateWithLifecycle()
-    val task2IsBlank by viewModel.cate1TaskBlank.collectAsStateWithLifecycle()
-    val task3IsBlank by viewModel.cate1TaskBlank.collectAsStateWithLifecycle()
+    val task2IsBlank by viewModel.cate2TaskBlank.collectAsStateWithLifecycle()
+    val task3IsBlank by viewModel.cate3TaskBlank.collectAsStateWithLifecycle()
 
     LaunchedEffect(task1IsBlank) {
         if(task1IsBlank) {
+            toolBarDetailButtonStatus = ToolBarButtonStatus.UNAVAILABLE
+            toolBarRoutineButtonStatus = ToolBarButtonStatus.UNAVAILABLE
+            toolBarImportanceButtonStatus = ToolBarButtonStatus.UNAVAILABLE
+        } else {
+            toolBarDetailButtonStatus = ToolBarButtonStatus.OFF
+            toolBarRoutineButtonStatus = ToolBarButtonStatus.OFF
+            toolBarImportanceButtonStatus = ToolBarButtonStatus.OFF
+        }
+    }
+
+    LaunchedEffect(task2IsBlank) {
+        if(task2IsBlank) {
+            toolBarDetailButtonStatus = ToolBarButtonStatus.UNAVAILABLE
+            toolBarRoutineButtonStatus = ToolBarButtonStatus.UNAVAILABLE
+            toolBarImportanceButtonStatus = ToolBarButtonStatus.UNAVAILABLE
+        } else {
+            toolBarDetailButtonStatus = ToolBarButtonStatus.OFF
+            toolBarRoutineButtonStatus = ToolBarButtonStatus.OFF
+            toolBarImportanceButtonStatus = ToolBarButtonStatus.OFF
+        }
+    }
+
+    LaunchedEffect(task3IsBlank) {
+        if(task3IsBlank) {
             toolBarDetailButtonStatus = ToolBarButtonStatus.UNAVAILABLE
             toolBarRoutineButtonStatus = ToolBarButtonStatus.UNAVAILABLE
             toolBarImportanceButtonStatus = ToolBarButtonStatus.UNAVAILABLE
@@ -68,7 +98,8 @@ fun ToolBarScreen(
                 when(toolBarDetailButtonStatus) {
                     ToolBarButtonStatus.OFF -> {
                         toolBarDetailButtonStatus = ToolBarButtonStatus.ON
-                        viewModel.addSubTaskLayout((viewModel.cate1TaskList.value.size))
+
+                        viewModel.addSubTaskLayout(mainTaskIdx = mainTaskIdx, categoryIdx = categoryIdx)
                     }
                     else -> {}
                 }
@@ -78,8 +109,10 @@ fun ToolBarScreen(
 
             ToolBarButton(ToolBarButtonType.Routine, toolBarRoutineButtonStatus) {
                 when(toolBarRoutineButtonStatus) {
-                    ToolBarButtonStatus.ON -> {
-                        toolBarRoutineButtonStatus = ToolBarButtonStatus.OFF
+                    ToolBarButtonStatus.OFF -> {
+                        toolBarRoutineButtonStatus = ToolBarButtonStatus.ON
+
+                        viewModel.routineTabClick(categoryIdx = categoryIdx, mainTaskIdx = mainTaskIdx)
                     }
                     else -> {}
                 }
@@ -89,8 +122,10 @@ fun ToolBarScreen(
 
             ToolBarButton(ToolBarButtonType.Importance, toolBarImportanceButtonStatus) {
                 when(toolBarImportanceButtonStatus) {
-                    ToolBarButtonStatus.ON -> {
-                        toolBarImportanceButtonStatus = ToolBarButtonStatus.OFF
+                    ToolBarButtonStatus.OFF -> {
+                        toolBarImportanceButtonStatus = ToolBarButtonStatus.ON
+
+                        viewModel.importanceTabClick(categoryIdx = categoryIdx, mainTaskIdx = mainTaskIdx)
                     }
                     else -> {}
                 }

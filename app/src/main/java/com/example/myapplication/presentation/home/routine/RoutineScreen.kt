@@ -10,7 +10,9 @@ import com.example.myapplication.presentation.component.RepeatCycle
 import kotlinx.coroutines.launch
 
 @Composable
-fun RoutineScreen() {
+fun RoutineScreen(
+    onFinishCallback: () -> Unit
+) {
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { 3 })
     val coroutineScope = rememberCoroutineScope()
 
@@ -48,9 +50,12 @@ fun RoutineScreen() {
                     }
                 },
                 onConfirmClick = {
-                    selectedCycle?.let { cycle ->
-                        // 완료
-                    }
+                    //FIXME 데이터가 없움
+                    onFinishCallback.invoke()
+//                    selectedCycle?.let { cycle ->
+//                        // 완료
+//                        onFinishCallback.invoke()
+//                    }
                 }
             )
         }

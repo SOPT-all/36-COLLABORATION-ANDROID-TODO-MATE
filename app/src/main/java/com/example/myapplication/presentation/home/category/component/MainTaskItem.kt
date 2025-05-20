@@ -1,5 +1,6 @@
 package com.example.myapplication.presentation.home.category.component
 
+import android.util.Log
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -37,6 +38,7 @@ import com.example.myapplication.ui.theme.BlueCategory3
 import com.example.myapplication.ui.theme.GreenCategory1
 import com.example.myapplication.ui.theme.LocalTodomateTypographyProvider
 import com.example.myapplication.ui.theme.PurpleCategory2
+import com.example.myapplication.ui.theme.RedHeart
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,10 +52,12 @@ fun MainTaskItem(
     val typoProvider = LocalTodomateTypographyProvider.current
     var cateValue by remember { mutableStateOf("") }
 
-    val addCate1SubTaskFlow by viewModel.addCate1SubTaskFlow.collectAsStateWithLifecycle(null)
-
     var itemChecked by remember { mutableStateOf(false) }
     var iconStatus by remember { mutableStateOf(R.drawable.icon_weekday_unchecked) }
+
+    val cate1MainTaskChecked by viewModel.cate1MainTaskChecked.collectAsStateWithLifecycle(null)
+    val cate2MainTaskChecked by viewModel.cate2MainTaskChecked.collectAsStateWithLifecycle(null)
+    val cate3MainTaskChecked by viewModel.cate3MainTaskChecked.collectAsStateWithLifecycle(null)
 
     // TF
     val interactionSource = remember { MutableInteractionSource() }
@@ -68,18 +72,92 @@ fun MainTaskItem(
         else -> BlueCategory3
     }
 
-    LaunchedEffect(cateValue) {
-        if (cateValue.isEmpty()) {
-            viewModel.taskIsBlank(true)
-        } else {
-            viewModel.taskIsBlank(false)
+    // add collect
+    LaunchedEffect(Unit) {
+        viewModel.addCate1SubTaskFlow.collect {
+            if(it == null) return@collect
+            if(it == mainTaskIdx && subCateList.size < 5) {
+                subCateList.add("")
+            }
         }
     }
 
-    LaunchedEffect(addCate1SubTaskFlow) {
-        if(addCate1SubTaskFlow == null) return@LaunchedEffect
-        if(addCate1SubTaskFlow == mainTaskIdx) {
-            subCateList.add("")
+    LaunchedEffect(Unit) {
+        viewModel.addCate2SubTaskFlow.collect {
+            if(it == null) return@collect
+            if(it == mainTaskIdx && subCateList.size < 5) {
+                subCateList.add("")
+            }
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.addCate3SubTaskFlow.collect {
+            if(it == null) return@collect
+            if(it == mainTaskIdx && subCateList.size < 5) {
+                subCateList.add("")
+            }
+        }
+    }
+
+    // Delete Collect
+//    LaunchedEffect(Unit) {
+//        viewModel.deleteCate1SubTask.collect {
+//            if(it == null) return@collect
+//            if(it == mainTaskIdx) {
+//                subCateList.removeAt(subCateList.lastIndex)
+//            }
+//        }
+//    }
+//
+//    LaunchedEffect(Unit) {
+//        viewModel.deleteCate2SubTask.collect {
+//            if(it == null) return@collect
+//            if(it == mainTaskIdx) {
+//                subCateList.removeAt(subCateList.lastIndex)
+//            }
+//        }
+//    }
+//
+//    LaunchedEffect(Unit) {
+//        viewModel.deleteCate3SubTask.collect {
+//            if(it == null) return@collect
+//            if(it == mainTaskIdx) {
+//                subCateList.removeAt(subCateList.lastIndex)
+//            }
+//        }
+//    }
+
+    // check collect
+    LaunchedEffect(cate1MainTaskChecked) {
+        if(cate1MainTaskChecked == null) return@LaunchedEffect
+
+        if(cate1MainTaskChecked!!.first == mainTaskIdx) {
+            itemChecked = cate1MainTaskChecked!!.second
+        }
+    }
+
+    LaunchedEffect(cate2MainTaskChecked) {
+        if(cate2MainTaskChecked == null) return@LaunchedEffect
+
+        if(cate2MainTaskChecked!!.first == mainTaskIdx) {
+            itemChecked = cate2MainTaskChecked!!.second
+        }
+    }
+
+    LaunchedEffect(cate3MainTaskChecked) {
+        if(cate3MainTaskChecked == null) return@LaunchedEffect
+
+        if(cate3MainTaskChecked!!.first == mainTaskIdx) {
+            itemChecked = cate3MainTaskChecked!!.second
+        }
+    }
+
+    LaunchedEffect(cateValue) {
+        if (cateValue.isEmpty()) {
+            viewModel.taskIsBlank(true, categoryIdx)
+        } else {
+            viewModel.taskIsBlank(false, categoryIdx)
         }
     }
 
@@ -93,11 +171,7 @@ fun MainTaskItem(
         } else {
             R.drawable.icon_weekday_unchecked
         }
-
-
     }
-
-
 
     Column {
         Row(
@@ -112,7 +186,10 @@ fun MainTaskItem(
                 modifier = Modifier
                     .size(20.dp)
                     .noRippleClickable {
-                        itemChecked = !itemChecked
+                        if(!focusState) {
+                            itemChecked = !itemChecked
+                            viewModel.checkMainTask(categoryIdx, mainTaskIdx, itemChecked)
+                        }
                     }
             )
 
@@ -125,7 +202,8 @@ fun MainTaskItem(
                 singleLine = true,
                 textStyle = typoProvider.body_reg_14,
                 modifier = Modifier
-                    .weight(1f)
+                    //TODO 중요도 있을때 false, 없을때 true
+                    .weight(1f, true)
                     .indicatorLine(
                         enabled = true,
                         isError = false,
@@ -141,19 +219,41 @@ fun MainTaskItem(
                     )
                     .onFocusChanged {
                         focusState = it.isFocused
+                        if(it.isFocused) {
+                            viewModel.focusOnTask(categoryIdx, mainTaskIdx)
+                        }
                         if (!it.isFocused && cateValue.isNotEmpty()) {
                             finishEditCallback(cateValue)
                         }
                     }
                     .focusRequester(focusRequester),
             )
+
+            Spacer(Modifier.width(8.dp))
+
+            //TODO 중요도 있을때 없을때 구분
+            Icon(
+                imageVector = ImageVector.vectorResource(R.drawable.icon_importance_dot),
+                contentDescription = null,
+                //TODO 중요도 나누기
+                tint = RedHeart,
+                modifier = Modifier.size(8.dp)
+            )
         }
 
         Spacer(Modifier.height(8.dp))
 
         subCateList.forEachIndexed { index, _ ->
-            SubTaskItem(subCateList[index], categoryIdx) { editText ->
+            SubTaskItem(
+                viewModel = viewModel,
+                subTaskName = subCateList[index],
+                categoryIdx = categoryIdx,
+                mainTaskIdx = mainTaskIdx,
+                subTaskIdx = index
+            ) { editText ->
                 subCateList[index] = editText
+
+                viewModel.addSubTask(categoryIdx, mainTaskIdx, editText)
             }
         }
     }

@@ -1,22 +1,6 @@
 <resources>
     <string name="app_name">My Application</string>
 
-    <!-- ToolBar -->
-    <string name="toolbar_details">세부사항</string>
-    <string name="toolbar_routine">루틴등록</string>
-    <string name="toolbar_importance">중요도</string>
-
-    <!-- Category -->
-    <string name="category1_title">카테고리 1</string>
-    <string name="category2_title">카테고리 2</string>
-    <string name="category3_title">카테고리 3</string>
-
-    <!-- MainBottomBar -->
-    <string name="bottombar_feed">피드</string>
-    <string name="bottombar_explore">둘러보기</string>
-    <string name="bottombar_noti">알림</string>
-    <string name="bottombar_my">My</string>
-
     <!--    contentDescription  -->
     <string name="icon_logo">icon_logo</string>
     <string name="icon_databox">icon_databox</string>
@@ -31,10 +15,26 @@
     <string name="ic_moveleft">ic_moveleft</string>
     <string name="ic_moveright">ic_moveright</string>
 
+    <!-- ToolBar -->
+    <string name="toolbar_details">세부사항</string>
+    <string name="toolbar_routine">루틴등록</string>
+    <string name="toolbar_importance">중요도</string>
+
+    <!-- Category -->
+    <string name="category1_title">카테고리 1</string>
+    <string name="category2_title">카테고리 2</string>
+    <string name="category3_title">카테고리 3</string>
+
     <!--    people box -->
     <string name="profile_name">me</string>
 
     <!--    calendar    -->
     <string name="year_and_month">%s년 %s월</string>
     <string name="week">주</string>
+
+    <!-- MainBottomBar -->
+    <string name="bottombar_feed">피드</string>
+    <string name="bottombar_explore">둘러보기</string>
+    <string name="bottombar_noti">알림</string>
+    <string name="bottombar_my">My</string>
 </resources>
