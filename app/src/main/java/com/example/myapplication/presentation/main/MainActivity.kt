@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
             TodomateTheme {
                 Scaffold(modifier = Modifier.fillMaxSize(),
                     bottomBar = {
-                        MainBottomBar()
+//                        MainBottomBar()
                     }
                 ) { innerPadding ->
                     HomeScreen(

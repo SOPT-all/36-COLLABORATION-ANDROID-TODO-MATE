@@ -39,7 +39,6 @@ fun ToolBarScreen(
     subTaskIdx: Int,
     isKeyBoardShown: Boolean
 ) {
-    Log.d("Logd", "categoryIdx: $categoryIdx, mainTaskIdx: $mainTaskIdx, subTaskIdx: $subTaskIdx targeted: $isKeyBoardShown")
 
     var toolBarDetailButtonStatus by remember { mutableStateOf(ToolBarButtonStatus.ON) }
     var toolBarRoutineButtonStatus by remember { mutableStateOf(ToolBarButtonStatus.ON) }

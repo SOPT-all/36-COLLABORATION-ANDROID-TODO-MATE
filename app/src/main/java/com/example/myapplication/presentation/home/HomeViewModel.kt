@@ -1,5 +1,6 @@
 package com.example.myapplication.presentation.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.remote.model.response.MainTaskData
@@ -32,8 +33,8 @@ class HomeViewModel(
     // cate1
     private val cate1TaskList : MutableList<MainTaskData> = mutableListOf()
 
-    private val _addCate1SubTaskFlow = MutableSharedFlow<Int?>()
-    val addCate1SubTaskFlow: MutableSharedFlow<Int?> get() = _addCate1SubTaskFlow
+    private val _addCate1SubTaskFlow = MutableSharedFlow<Pair<Int, Int>?>()
+    val addCate1SubTaskFlow: MutableSharedFlow<Pair<Int, Int>?> get() = _addCate1SubTaskFlow
 
     private val _deleteCate1SubTask = MutableSharedFlow<Int?>()
     val deleteCate1SubTask: MutableSharedFlow<Int?> get() = _deleteCate1SubTask
@@ -51,8 +52,8 @@ class HomeViewModel(
     // cate2
     private val cate2TaskList : MutableList<MainTaskData> = mutableListOf()
 
-    private val _addCate2SubTaskFlow = MutableSharedFlow<Int?>()
-    val addCate2SubTaskFlow: MutableSharedFlow<Int?> get() = _addCate2SubTaskFlow
+    private val _addCate2SubTaskFlow = MutableSharedFlow<Pair<Int, Int>?>()
+    val addCate2SubTaskFlow: MutableSharedFlow<Pair<Int, Int>?> get() = _addCate2SubTaskFlow
 
     private val _deleteCate2SubTask = MutableSharedFlow<Int?>()
     val deleteCate2SubTask: MutableSharedFlow<Int?> get() = _deleteCate2SubTask
@@ -70,8 +71,8 @@ class HomeViewModel(
     // cate3
     private val cate3TaskList : MutableList<MainTaskData> = mutableListOf()
 
-    private val _addCate3SubTaskFlow = MutableSharedFlow<Int?>()
-    val addCate3SubTaskFlow: MutableSharedFlow<Int?> get() = _addCate3SubTaskFlow
+    private val _addCate3SubTaskFlow = MutableSharedFlow<Pair<Int, Int>?>()
+    val addCate3SubTaskFlow: MutableSharedFlow<Pair<Int, Int>?> get() = _addCate3SubTaskFlow
 
     private val _deleteCate3SubTask = MutableSharedFlow<Int?>()
     val deleteCate3SubTask: MutableSharedFlow<Int?> get() = _deleteCate3SubTask
@@ -115,9 +116,9 @@ class HomeViewModel(
 
     fun addSubTaskLayout(mainTaskIdx: Int, categoryIdx: Int) = viewModelScope.launch {
         when(categoryIdx) {
-            0 -> _addCate1SubTaskFlow.emit(mainTaskIdx)
-            1 -> _addCate2SubTaskFlow.emit(mainTaskIdx)
-            else -> _addCate3SubTaskFlow.emit(mainTaskIdx)
+            0 -> _addCate1SubTaskFlow.emit(Pair(categoryIdx, mainTaskIdx))
+            1 -> _addCate2SubTaskFlow.emit(Pair(categoryIdx, mainTaskIdx))
+            else -> _addCate3SubTaskFlow.emit(Pair(categoryIdx, mainTaskIdx))
         }
     }
 
@@ -136,9 +137,9 @@ class HomeViewModel(
         newSubTaskList?.add(newSubTask)
 
         when(categoryIdx) {
-            0 -> cate1TaskList[mainTaskIdx].subTasks?.add(newSubTask)
-            1 -> cate2TaskList[mainTaskIdx].subTasks?.add(newSubTask)
-            else -> cate3TaskList[mainTaskIdx].subTasks?.add(newSubTask)
+            0 -> cate1TaskList[mainTaskIdx].subTasks = newSubTaskList
+            1 -> cate2TaskList[mainTaskIdx].subTasks = newSubTaskList
+            else -> cate3TaskList[mainTaskIdx].subTasks = newSubTaskList
         }
 
         //TODO 서버연결 후 서브테스크 내용 보내기
@@ -193,6 +194,8 @@ class HomeViewModel(
             0 -> {
                 cate1TaskList[mainTaskIdx].subTasks?.get(subTaskIdx)?.completed = checked
                 _cate1SubTaskChecked.emit(Triple(mainTaskIdx, subTaskIdx, checked))
+
+//                Log.d("Logd", cate1TaskList[mainTaskIdx].subTasks.toString())
 
                 val isAllItemTrue = cate1TaskList[mainTaskIdx].subTasks?.all { it.completed == true } == true
                 val isAllItemFalse = cate1TaskList[mainTaskIdx].subTasks?.all { it.completed == false } == true

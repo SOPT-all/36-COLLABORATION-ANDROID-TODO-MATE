@@ -126,7 +126,9 @@ fun HomeScreen(
         },
         onHideKeyboard = {
             focusManager.clearFocus()
-//            targeted = false
+            if(!showRoutineLayout && !showImportanceLayout) {
+                targeted = false
+            }
         }
     )
 

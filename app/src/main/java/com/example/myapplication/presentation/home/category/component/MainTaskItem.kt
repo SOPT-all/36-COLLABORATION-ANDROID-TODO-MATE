@@ -55,10 +55,6 @@ fun MainTaskItem(
     var itemChecked by remember { mutableStateOf(false) }
     var iconStatus by remember { mutableStateOf(R.drawable.icon_weekday_unchecked) }
 
-    val cate1MainTaskChecked by viewModel.cate1MainTaskChecked.collectAsStateWithLifecycle(null)
-    val cate2MainTaskChecked by viewModel.cate2MainTaskChecked.collectAsStateWithLifecycle(null)
-    val cate3MainTaskChecked by viewModel.cate3MainTaskChecked.collectAsStateWithLifecycle(null)
-
     // TF
     val interactionSource = remember { MutableInteractionSource() }
     val focusRequester = remember { FocusRequester() }
@@ -76,7 +72,7 @@ fun MainTaskItem(
     LaunchedEffect(Unit) {
         viewModel.addCate1SubTaskFlow.collect {
             if(it == null) return@collect
-            if(it == mainTaskIdx && subCateList.size < 5) {
+            if(it.first == categoryIdx &&it.second == mainTaskIdx && subCateList.size < 5) {
                 subCateList.add("")
             }
         }
@@ -85,7 +81,7 @@ fun MainTaskItem(
     LaunchedEffect(Unit) {
         viewModel.addCate2SubTaskFlow.collect {
             if(it == null) return@collect
-            if(it == mainTaskIdx && subCateList.size < 5) {
+            if(it.first == categoryIdx &&it.second == mainTaskIdx && subCateList.size < 5) {
                 subCateList.add("")
             }
         }
@@ -94,7 +90,7 @@ fun MainTaskItem(
     LaunchedEffect(Unit) {
         viewModel.addCate3SubTaskFlow.collect {
             if(it == null) return@collect
-            if(it == mainTaskIdx && subCateList.size < 5) {
+            if(it.first == categoryIdx &&it.second == mainTaskIdx && subCateList.size < 5) {
                 subCateList.add("")
             }
         }
@@ -129,29 +125,36 @@ fun MainTaskItem(
 //    }
 
     // check collect
-    LaunchedEffect(cate1MainTaskChecked) {
-        if(cate1MainTaskChecked == null) return@LaunchedEffect
+    LaunchedEffect(Unit) {
+        viewModel.cate1MainTaskChecked.collect {
+            if(it == null) return@collect
 
-        if(cate1MainTaskChecked!!.first == mainTaskIdx) {
-            itemChecked = cate1MainTaskChecked!!.second
+            if(it.first == mainTaskIdx) {
+                itemChecked = it.second
+            }
         }
     }
 
-    LaunchedEffect(cate2MainTaskChecked) {
-        if(cate2MainTaskChecked == null) return@LaunchedEffect
+    LaunchedEffect(Unit) {
+        viewModel.cate2MainTaskChecked.collect {
+            if(it == null) return@collect
 
-        if(cate2MainTaskChecked!!.first == mainTaskIdx) {
-            itemChecked = cate2MainTaskChecked!!.second
+            if(it.first == mainTaskIdx) {
+                itemChecked = it.second
+            }
         }
     }
 
-    LaunchedEffect(cate3MainTaskChecked) {
-        if(cate3MainTaskChecked == null) return@LaunchedEffect
+    LaunchedEffect(Unit) {
+        viewModel.cate3MainTaskChecked.collect {
+            if(it == null) return@collect
 
-        if(cate3MainTaskChecked!!.first == mainTaskIdx) {
-            itemChecked = cate3MainTaskChecked!!.second
+            if(it.first == mainTaskIdx) {
+                itemChecked = it.second
+            }
         }
     }
+
 
     LaunchedEffect(cateValue) {
         if (cateValue.isEmpty()) {

@@ -77,31 +77,33 @@ fun SubTaskItem(
         else -> BlueCategory3
     }
 
-    val cate1SubTaskChecked by viewModel.cate1SubTaskChecked.collectAsStateWithLifecycle(null)
-    val cate2SubTaskChecked by viewModel.cate2SubTaskChecked.collectAsStateWithLifecycle(null)
-    val cate3SubTaskChecked by viewModel.cate3SubTaskChecked.collectAsStateWithLifecycle(null)
+    LaunchedEffect(Unit) {
+        viewModel.cate1SubTaskChecked.collect {
+            if(it == null) return@collect
 
-    LaunchedEffect(cate1SubTaskChecked) {
-        if(cate1SubTaskChecked == null) return@LaunchedEffect
-
-        if(cate1SubTaskChecked!!.first == mainTaskIdx && cate1SubTaskChecked!!.second == subTaskIdx) {
-            itemChecked = cate1SubTaskChecked!!.third
+            if(it.first == mainTaskIdx && it.second == subTaskIdx) {
+                itemChecked = it.third
+            }
         }
     }
 
-    LaunchedEffect(cate2SubTaskChecked) {
-        if(cate2SubTaskChecked == null) return@LaunchedEffect
+    LaunchedEffect(Unit) {
+        viewModel.cate2SubTaskChecked.collect {
+            if(it == null) return@collect
 
-        if(cate2SubTaskChecked!!.first == mainTaskIdx && cate2SubTaskChecked!!.second == subTaskIdx) {
-            itemChecked = cate2SubTaskChecked!!.third
+            if(it.first == mainTaskIdx && it.second == subTaskIdx) {
+                itemChecked = it.third
+            }
         }
     }
 
-    LaunchedEffect(cate3SubTaskChecked) {
-        if(cate3SubTaskChecked == null) return@LaunchedEffect
+    LaunchedEffect(Unit) {
+        viewModel.cate3SubTaskChecked.collect {
+            if(it == null) return@collect
 
-        if(cate3SubTaskChecked!!.first == mainTaskIdx && cate3SubTaskChecked!!.second == subTaskIdx) {
-            itemChecked = cate3SubTaskChecked!!.third
+            if(it.first == mainTaskIdx && it.second == subTaskIdx) {
+                itemChecked = it.third
+            }
         }
     }
 
@@ -190,15 +192,6 @@ fun SubTaskItem(
                             if(it.isFocused) {
                                 viewModel.focusOnTask(categoryIdx, mainTaskIdx, subTaskIdx)
                             } else {
-//                                if(subCateValue.isEmpty() && !hasBeenContentChanged) {
-//                                    viewModel.deleteSubItemLayout(categoryIdx, mainTaskIdx)
-//                                } else {
-//                                    finishEditCallback(subCateValue)
-
-//                                    isFirstEnterAndFocus = true
-//                                    hasBeenContentChanged = false
-//                                }
-
                                 finishEditCallback(subCateValue)
                                 isFirstEnterAndFocus = true
                             }
