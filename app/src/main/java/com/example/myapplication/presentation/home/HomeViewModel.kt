@@ -2,6 +2,8 @@ package com.example.myapplication.presentation.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.myapplication.data.remote.model.response.MainTaskData
+import com.example.myapplication.data.remote.model.response.SubTaskData
 import com.example.myapplication.domain.repository.DummyRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,6 +21,13 @@ class HomeViewModel(
 
     private val _focusOnTask = MutableSharedFlow<Triple<Int, Int, Int>>()
     val focusOnTask: MutableSharedFlow<Triple<Int, Int, Int>> get() = _focusOnTask
+
+    private val _onRoutineClick = MutableSharedFlow<Pair<Int, Int>>()
+    val onRoutineClick: MutableSharedFlow<Pair<Int, Int>> get() = _onRoutineClick
+
+    private val _onImportanceClick = MutableSharedFlow<Pair<Int, Int>>()
+    val onImportanceClick: MutableSharedFlow<Pair<Int, Int>> get() = _onImportanceClick
+
 
     // cate1
     private val cate1TaskList : MutableList<MainTaskData> = mutableListOf()
@@ -77,13 +86,25 @@ class HomeViewModel(
     val cate3SubTaskChecked: MutableSharedFlow<Triple<Int, Int, Boolean>?> get() = _cate3SubTaskChecked
 
 
+    fun routineTabClick(categoryIdx: Int, mainTaskIdx: Int) = viewModelScope.launch {
+        _onRoutineClick.emit(Pair(categoryIdx, mainTaskIdx))
+    }
+
+    fun importanceTabClick(categoryIdx: Int, mainTaskIdx: Int) = viewModelScope.launch {
+        _onImportanceClick.emit(Pair(categoryIdx, mainTaskIdx))
+    }
+
 
     fun getCategoryTaskList() = viewModelScope.launch {
         //TODO 서버연결 후 테스크 내용들 받고 분류
     }
 
     fun addMainTask(mainTaskContent: String, categoryIdx: Int) = viewModelScope.launch {
-        val newMainTask = MainTaskData(mainTaskContent, false, mutableListOf())
+        val newMainTask = MainTaskData(
+            taskContent = mainTaskContent,
+            completed = false,
+            subTasks = mutableListOf()
+        )
 
         when(categoryIdx) {
             0 -> cate1TaskList.add(newMainTask)
@@ -107,14 +128,17 @@ class HomeViewModel(
             else -> cate3TaskList
         }
 
-        val newSubTask = SubTaskData(subTaskContent, false)
-        val newSubTaskList = originalListValue[mainTaskIdx].subTaskList
-        newSubTaskList.add(newSubTask)
+        val newSubTask = SubTaskData(
+            content = subTaskContent,
+            completed = false
+        )
+        val newSubTaskList = originalListValue[mainTaskIdx].subTasks
+        newSubTaskList?.add(newSubTask)
 
         when(categoryIdx) {
-            0 -> cate1TaskList[mainTaskIdx].subTaskList.add(newSubTask)
-            1 -> cate2TaskList[mainTaskIdx].subTaskList.add(newSubTask)
-            else -> cate3TaskList[mainTaskIdx].subTaskList.add(newSubTask)
+            0 -> cate1TaskList[mainTaskIdx].subTasks?.add(newSubTask)
+            1 -> cate2TaskList[mainTaskIdx].subTasks?.add(newSubTask)
+            else -> cate3TaskList[mainTaskIdx].subTasks?.add(newSubTask)
         }
 
         //TODO 서버연결 후 서브테스크 내용 보내기
@@ -123,41 +147,41 @@ class HomeViewModel(
     fun checkMainTask(categoryIdx: Int, mainTaskIdx: Int, checked: Boolean) = viewModelScope.launch {
         when(categoryIdx) {
             0 -> {
-                cate1TaskList[mainTaskIdx].checked = checked
-                cate1TaskList[mainTaskIdx].subTaskList.forEach {
-                    it.checked = checked
+                cate1TaskList[mainTaskIdx].completed = checked
+                cate1TaskList[mainTaskIdx].subTasks?.forEach {
+                    it.completed = checked
                 }
 
                 _cate1MainTaskChecked.emit(Pair(mainTaskIdx, checked))
 
                 // 메인 테스크 체크시 서브 테스크들 체크
-                cate1TaskList[mainTaskIdx].subTaskList.forEachIndexed { index, _ ->
+                cate1TaskList[mainTaskIdx].subTasks?.forEachIndexed { index, _ ->
                     _cate1SubTaskChecked.emit(Triple(mainTaskIdx, index, checked))
                 }
             }
             1 -> {
-                cate2TaskList[mainTaskIdx].checked = checked
-                cate2TaskList[mainTaskIdx].subTaskList.forEach {
-                    it.checked = checked
+                cate2TaskList[mainTaskIdx].completed = checked
+                cate2TaskList[mainTaskIdx].subTasks?.forEach {
+                    it.completed = checked
                 }
 
                 _cate2MainTaskChecked.emit(Pair(mainTaskIdx, checked))
 
                 // 메인 테스크 체크시 서브 테스크들 체크
-                cate2TaskList[mainTaskIdx].subTaskList.forEachIndexed { index, _ ->
+                cate2TaskList[mainTaskIdx].subTasks?.forEachIndexed { index, _ ->
                     _cate2SubTaskChecked.emit(Triple(mainTaskIdx, index, checked))
                 }
             }
             else -> {
-                cate3TaskList[mainTaskIdx].checked = checked
-                cate3TaskList[mainTaskIdx].subTaskList.forEach {
-                    it.checked = checked
+                cate3TaskList[mainTaskIdx].completed = checked
+                cate3TaskList[mainTaskIdx].subTasks?.forEach {
+                    it.completed = checked
                 }
 
                 _cate3MainTaskChecked.emit(Pair(mainTaskIdx, checked))
 
                 // 메인 테스크 체크시 서브 테스크들 체크
-                cate3TaskList[mainTaskIdx].subTaskList.forEachIndexed { index, _ ->
+                cate3TaskList[mainTaskIdx].subTasks?.forEachIndexed { index, _ ->
                     _cate3SubTaskChecked.emit(Triple(mainTaskIdx, index, checked))
                 }
             }
@@ -167,38 +191,38 @@ class HomeViewModel(
     fun checkSubTask(categoryIdx: Int, mainTaskIdx: Int, subTaskIdx: Int, checked: Boolean) = viewModelScope.launch {
         when(categoryIdx) {
             0 -> {
-                cate1TaskList[mainTaskIdx].subTaskList[subTaskIdx].checked = checked
+                cate1TaskList[mainTaskIdx].subTasks?.get(subTaskIdx)?.completed = checked
                 _cate1SubTaskChecked.emit(Triple(mainTaskIdx, subTaskIdx, checked))
 
-                val isAllItemTrue = cate1TaskList[mainTaskIdx].subTaskList.all { it.checked == true }
-                val isAllItemFalse = cate1TaskList[mainTaskIdx].subTaskList.all { it.checked == false }
+                val isAllItemTrue = cate1TaskList[mainTaskIdx].subTasks?.all { it.completed == true } == true
+                val isAllItemFalse = cate1TaskList[mainTaskIdx].subTasks?.all { it.completed == false } == true
 
                 if(isAllItemTrue || isAllItemFalse) {
-                    cate1TaskList[mainTaskIdx].checked = isAllItemTrue
+                    cate1TaskList[mainTaskIdx].completed = isAllItemTrue
                     _cate1MainTaskChecked.emit(Pair(mainTaskIdx, isAllItemTrue))
                 }
             }
             1 -> {
-                cate2TaskList[mainTaskIdx].subTaskList[subTaskIdx].checked = checked
+                cate2TaskList[mainTaskIdx].subTasks?.get(subTaskIdx)?.completed = checked
                 _cate2SubTaskChecked.emit(Triple(mainTaskIdx, subTaskIdx, checked))
 
-                val isAllItemTrue = cate2TaskList[mainTaskIdx].subTaskList.all { it.checked == true }
-                val isAllItemFalse = cate2TaskList[mainTaskIdx].subTaskList.all { it.checked == false }
+                val isAllItemTrue = cate2TaskList[mainTaskIdx].subTasks?.all { it.completed == true } == true
+                val isAllItemFalse = cate2TaskList[mainTaskIdx].subTasks?.all { it.completed == false } == true
 
                 if(isAllItemTrue || isAllItemFalse) {
-                    cate2TaskList[mainTaskIdx].checked = isAllItemTrue
+                    cate2TaskList[mainTaskIdx].completed = isAllItemTrue
                     _cate2MainTaskChecked.emit(Pair(mainTaskIdx, isAllItemTrue))
                 }
             }
             else -> {
-                cate3TaskList[mainTaskIdx].subTaskList[subTaskIdx].checked = checked
+                cate3TaskList[mainTaskIdx].subTasks?.get(subTaskIdx)?.completed = checked
                 _cate3SubTaskChecked.emit(Triple(mainTaskIdx, subTaskIdx, checked))
 
-                val isAllItemTrue = cate3TaskList[mainTaskIdx].subTaskList.all { it.checked == true }
-                val isAllItemFalse = cate3TaskList[mainTaskIdx].subTaskList.all { it.checked == false }
+                val isAllItemTrue = cate3TaskList[mainTaskIdx].subTasks?.all { it.completed == true } == true
+                val isAllItemFalse = cate3TaskList[mainTaskIdx].subTasks?.all { it.completed == false } == true
 
                 if(isAllItemTrue || isAllItemFalse) {
-                    cate3TaskList[mainTaskIdx].checked = isAllItemTrue
+                    cate3TaskList[mainTaskIdx].completed = isAllItemTrue
                     _cate3MainTaskChecked.emit(Pair(mainTaskIdx, isAllItemTrue))
                 }
             }
@@ -231,14 +255,3 @@ class HomeViewModel(
         _focusOnTask.emit(Triple(categoryIdx, mainTaskIdx, subTaskIdx))
     }
 }
-
-data class MainTaskData(
-    var title: String,
-    var checked: Boolean,
-    var subTaskList: MutableList<SubTaskData>
-)
-
-data class SubTaskData(
-    var title: String,
-    var checked: Boolean
-)

@@ -28,12 +28,3 @@ fun CategoryScreen(viewModel: HomeViewModel) {
         CategoryItem(2, viewModel)
     }
 }
-
-fun Modifier.addFocusCleaner(focusManager: FocusManager, doOnClear: () -> Unit = {}): Modifier {
-    return this.pointerInput(Unit) {
-        detectTapGestures(onTap = {
-            doOnClear()
-            focusManager.clearFocus()
-        })
-    }
-}

@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,16 +26,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
-import com.example.myapplication.R
 import com.example.myapplication.presentation.custom.HeaderComponent
 import com.example.myapplication.presentation.home.calender.CalenderScreen
 import com.example.myapplication.presentation.home.category.CategoryScreen
-import com.example.myapplication.presentation.home.category.addFocusCleaner
-import com.example.myapplication.presentation.home.profile.ProfileBoxComponent
+import com.example.myapplication.presentation.home.importance.ImportanceScreen
+import com.example.myapplication.presentation.home.routine.RoutineScreen
 import com.example.myapplication.presentation.home.toolBox.ToolBarScreen
 import com.example.myapplication.presentation.main.MainActivity
+import com.example.myapplication.presentation.util.compose.addFocusCleaner
 import com.example.myapplication.presentation.util.compose.findActivity
 import com.example.myapplication.presentation.util.keyboard.KeyboardVisibilityUtils
+import com.example.myapplication.ui.theme.RedHeart
+import com.example.myapplication.ui.theme.White
 
 private lateinit var keyboardVisibilityUtils: KeyboardVisibilityUtils
 
@@ -47,7 +51,9 @@ fun HomeScreen(
     val context = LocalContext.current
     val activity = context.findActivity() as MainActivity
 
-    var keyBoardShown by remember { mutableStateOf(false) }
+    var targeted by remember { mutableStateOf(false) }
+    var showRoutineLayout by remember { mutableStateOf(false) }
+    var showImportanceLayout by remember { mutableStateOf(false) }
 
     val addCate1SubTaskFlow by viewModel.addCate1SubTaskFlow.collectAsState(null)
     val addCate2SubTaskFlow by viewModel.addCate2SubTaskFlow.collectAsState(null)
@@ -62,10 +68,6 @@ fun HomeScreen(
             targetCategoryIdx = it.first
             targetMainTaskIdx = it.second
             targetSubTaskIdx = it.third
-
-//            Log.d("Logd", "targetCategoryIdx : $targetCategoryIdx")
-//            Log.d("Logd", "targetMainTaskIdx : $targetMainTaskIdx")
-//            Log.d("Logd", "targetSubTaskIdx : $targetSubTaskIdx")
         }
     }
 
@@ -74,7 +76,7 @@ fun HomeScreen(
             if(addCate1SubTaskFlow == null) return@collect
 
             focusManager.clearFocus()
-            keyBoardShown = false
+            targeted = false
         }
     }
 
@@ -83,7 +85,7 @@ fun HomeScreen(
             if(addCate2SubTaskFlow == null) return@collect
 
             focusManager.clearFocus()
-            keyBoardShown = false
+            targeted = false
         }
     }
 
@@ -92,18 +94,38 @@ fun HomeScreen(
             if(addCate3SubTaskFlow == null) return@collect
 
             focusManager.clearFocus()
-            keyBoardShown = false
+            targeted = false
         }
     }
+
+    LaunchedEffect(Unit) {
+        viewModel.onRoutineClick.collect {
+            focusManager.clearFocus()
+            showRoutineLayout = true
+            showImportanceLayout = false
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.onImportanceClick.collect {
+            focusManager.clearFocus()
+            showImportanceLayout = true
+            showRoutineLayout = false
+        }
+    }
+
+
 
     keyboardVisibilityUtils = KeyboardVisibilityUtils(
         window = activity.window,
         onShowKeyboard = {
-            keyBoardShown = true
+            targeted = true
+            showRoutineLayout = false
+            showImportanceLayout = false
         },
         onHideKeyboard = {
             focusManager.clearFocus()
-            keyBoardShown = false
+//            targeted = false
         }
     )
 
@@ -131,21 +153,50 @@ fun HomeScreen(
         }
     }
 
-    Box(
-        modifier = Modifier
+    Column(
+        modifier = modifier
             .fillMaxSize()
-            .padding(bottom = if (keyBoardShown) WindowInsets.ime.asPaddingValues().calculateBottomPadding() else 0.dp)
     ) {
         Box(
-            modifier.align(Alignment.BottomCenter)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = if (targeted) WindowInsets.ime.asPaddingValues().calculateBottomPadding() else 0.dp)
         ) {
-            ToolBarScreen(
-                viewModel = viewModel,
-                isKeyBoardShown = keyBoardShown,
-                categoryIdx = targetCategoryIdx,
-                mainTaskIdx = targetMainTaskIdx,
-                subTaskIdx = targetSubTaskIdx
-            )
+            Column (
+                modifier.align(Alignment.BottomCenter)
+            ) {
+                ToolBarScreen(
+                    viewModel = viewModel,
+                    isKeyBoardShown = targeted,
+                    categoryIdx = targetCategoryIdx,
+                    mainTaskIdx = targetMainTaskIdx,
+                    subTaskIdx = targetSubTaskIdx
+                )
+
+                if(showRoutineLayout || showImportanceLayout) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(268.dp)
+                            .background(White)
+                    ) {
+                        if(showRoutineLayout) {
+                            RoutineScreen {
+                                showRoutineLayout = false
+                                targeted = false
+                            }
+                        }
+
+                        if(showImportanceLayout) {
+                            ImportanceScreen {
+                                showImportanceLayout = false
+                                targeted = false
+                            }
+                        }
+                    }
+                }
+
+            }
         }
     }
 

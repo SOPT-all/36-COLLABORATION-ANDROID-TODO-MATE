@@ -9,13 +9,17 @@ import com.example.myapplication.presentation.component.ImportanceCycle
 import com.example.myapplication.presentation.component.ImportanceSelector
 
 @Composable
-fun ImportanceScreen() {
+fun ImportanceScreen(
+    onConfirmClick: () -> Unit
+) {
     var selectedCycle by remember { mutableStateOf<ImportanceCycle?>(null) }
 
     ImportanceSelector(
         selected = selectedCycle,
         onSelect = { selectedCycle = it },
         onLeftClick = {  },
-        onConfirmClick = {  }
+        onConfirmClick = {
+            onConfirmClick.invoke()
+        }
     )
 }

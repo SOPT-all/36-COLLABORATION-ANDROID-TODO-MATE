@@ -1,5 +1,6 @@
 package com.example.myapplication.presentation.home.toolBox
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -38,6 +39,8 @@ fun ToolBarScreen(
     subTaskIdx: Int,
     isKeyBoardShown: Boolean
 ) {
+    Log.d("Logd", "categoryIdx: $categoryIdx, mainTaskIdx: $mainTaskIdx, subTaskIdx: $subTaskIdx targeted: $isKeyBoardShown")
+
     var toolBarDetailButtonStatus by remember { mutableStateOf(ToolBarButtonStatus.ON) }
     var toolBarRoutineButtonStatus by remember { mutableStateOf(ToolBarButtonStatus.ON) }
     var toolBarImportanceButtonStatus by remember { mutableStateOf(ToolBarButtonStatus.ON) }
@@ -108,6 +111,8 @@ fun ToolBarScreen(
                 when(toolBarRoutineButtonStatus) {
                     ToolBarButtonStatus.OFF -> {
                         toolBarRoutineButtonStatus = ToolBarButtonStatus.ON
+
+                        viewModel.routineTabClick(categoryIdx = categoryIdx, mainTaskIdx = mainTaskIdx)
                     }
                     else -> {}
                 }
@@ -119,6 +124,8 @@ fun ToolBarScreen(
                 when(toolBarImportanceButtonStatus) {
                     ToolBarButtonStatus.OFF -> {
                         toolBarImportanceButtonStatus = ToolBarButtonStatus.ON
+
+                        viewModel.importanceTabClick(categoryIdx = categoryIdx, mainTaskIdx = mainTaskIdx)
                     }
                     else -> {}
                 }
