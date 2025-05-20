@@ -1,4 +1,4 @@
-package com.example.myapplication.presentation.component
+package com.example.myapplication.presentation.home.routine.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*

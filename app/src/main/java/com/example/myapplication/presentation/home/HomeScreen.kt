@@ -213,10 +213,7 @@ fun HomeScreen(
                         }
                     }
                 }
-
             }
         }
     }
-
-
 }

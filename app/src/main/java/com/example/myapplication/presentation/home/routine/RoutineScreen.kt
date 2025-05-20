@@ -6,7 +6,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import com.example.myapplication.presentation.component.RepeatCycle
 import kotlinx.coroutines.launch
 
 @Composable
