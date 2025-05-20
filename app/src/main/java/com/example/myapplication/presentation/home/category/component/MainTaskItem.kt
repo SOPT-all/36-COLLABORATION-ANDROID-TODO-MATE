@@ -234,16 +234,16 @@ fun MainTaskItem(
                     .focusRequester(focusRequester),
             )
 
-            Spacer(Modifier.width(8.dp))
-
-            //TODO 중요도 있을때 없을때 구분
-            Icon(
-                imageVector = ImageVector.vectorResource(R.drawable.icon_importance_dot),
-                contentDescription = null,
-                //TODO 중요도 나누기
-                tint = RedHeart,
-                modifier = Modifier.size(8.dp)
-            )
+//            Spacer(Modifier.width(8.dp))
+//
+//            //TODO 중요도 있을때 없을때 구분
+//            Icon(
+//                imageVector = ImageVector.vectorResource(R.drawable.icon_importance_dot),
+//                contentDescription = null,
+//                //TODO 중요도 나누기
+//                tint = RedHeart,
+//                modifier = Modifier.size(8.dp)
+//            )
         }
 
         Spacer(Modifier.height(8.dp))
