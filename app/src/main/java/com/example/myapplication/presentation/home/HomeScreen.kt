@@ -1,5 +1,6 @@
 package com.example.myapplication.presentation.home
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -51,6 +53,51 @@ fun HomeScreen(
     var keyBoardShown by remember { mutableStateOf(false) }
 
     val addCate1SubTaskFlow by viewModel.addCate1SubTaskFlow.collectAsState(null)
+    val addCate2SubTaskFlow by viewModel.addCate2SubTaskFlow.collectAsState(null)
+    val addCate3SubTaskFlow by viewModel.addCate3SubTaskFlow.collectAsState(null)
+
+    var targetCategoryIdx by remember { mutableIntStateOf(-1) }
+    var targetMainTaskIdx by remember { mutableIntStateOf(-1) }
+    var targetSubTaskIdx by remember { mutableIntStateOf(-1) }
+
+    LaunchedEffect(Unit) {
+        viewModel.focusOnTask.collect {
+            targetCategoryIdx = it.first
+            targetMainTaskIdx = it.second
+            targetSubTaskIdx = it.third
+
+//            Log.d("Logd", "targetCategoryIdx : $targetCategoryIdx")
+//            Log.d("Logd", "targetMainTaskIdx : $targetMainTaskIdx")
+//            Log.d("Logd", "targetSubTaskIdx : $targetSubTaskIdx")
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.addCate1SubTaskFlow.collect {
+            if(addCate1SubTaskFlow == null) return@collect
+
+            focusManager.clearFocus()
+            keyBoardShown = false
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.addCate2SubTaskFlow.collect {
+            if(addCate2SubTaskFlow == null) return@collect
+
+            focusManager.clearFocus()
+            keyBoardShown = false
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.addCate3SubTaskFlow.collect {
+            if(addCate3SubTaskFlow == null) return@collect
+
+            focusManager.clearFocus()
+            keyBoardShown = false
+        }
+    }
 
     keyboardVisibilityUtils = KeyboardVisibilityUtils(
         window = activity.window,
@@ -63,12 +110,7 @@ fun HomeScreen(
         }
     )
 
-    LaunchedEffect(addCate1SubTaskFlow) {
-        if(addCate1SubTaskFlow == null) return@LaunchedEffect
 
-        focusManager.clearFocus()
-        keyBoardShown = false
-    }
 
     LazyColumn(
         modifier = modifier
@@ -94,7 +136,13 @@ fun HomeScreen(
         Box(
             modifier.align(Alignment.BottomCenter)
         ) {
-            ToolBarScreen(viewModel, keyBoardShown)
+            ToolBarScreen(
+                viewModel = viewModel,
+                isKeyBoardShown = keyBoardShown,
+                categoryIdx = targetCategoryIdx,
+                mainTaskIdx = targetMainTaskIdx,
+                subTaskIdx = targetSubTaskIdx
+            )
         }
     }
 }
