@@ -3,6 +3,8 @@ package com.example.myapplication.presentation.home
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.myapplication.data.remote.model.request.AddMainTaskRequest
+import com.example.myapplication.data.remote.model.request.AddSubTaskRequest
 import com.example.myapplication.data.remote.model.response.MainTaskData
 import com.example.myapplication.data.remote.model.response.SubTaskData
 import com.example.myapplication.domain.repository.TaskRepository
@@ -33,6 +35,9 @@ class HomeViewModel(
     // cate1
     private val cate1TaskList : MutableList<MainTaskData> = mutableListOf()
 
+    private val _settingCate1TaskList = MutableSharedFlow<List<MainTaskData>>()
+    val settingCate1TaskList: MutableSharedFlow<List<MainTaskData>> get() = _settingCate1TaskList
+
     private val _addCate1SubTaskFlow = MutableSharedFlow<Pair<Int, Int>?>()
     val addCate1SubTaskFlow: MutableSharedFlow<Pair<Int, Int>?> get() = _addCate1SubTaskFlow
 
@@ -52,6 +57,9 @@ class HomeViewModel(
     // cate2
     private val cate2TaskList : MutableList<MainTaskData> = mutableListOf()
 
+    private val _settingCate2TaskList = MutableSharedFlow<List<MainTaskData>>()
+    val settingCate2TaskList: MutableSharedFlow<List<MainTaskData>> get() = _settingCate2TaskList
+
     private val _addCate2SubTaskFlow = MutableSharedFlow<Pair<Int, Int>?>()
     val addCate2SubTaskFlow: MutableSharedFlow<Pair<Int, Int>?> get() = _addCate2SubTaskFlow
 
@@ -70,6 +78,9 @@ class HomeViewModel(
 
     // cate3
     private val cate3TaskList : MutableList<MainTaskData> = mutableListOf()
+
+    private val _settingCate3TaskList = MutableSharedFlow<List<MainTaskData>>()
+    val settingCate3TaskList: MutableSharedFlow<List<MainTaskData>> get() = _settingCate3TaskList
 
     private val _addCate3SubTaskFlow = MutableSharedFlow<Pair<Int, Int>?>()
     val addCate3SubTaskFlow: MutableSharedFlow<Pair<Int, Int>?> get() = _addCate3SubTaskFlow
@@ -101,7 +112,13 @@ class HomeViewModel(
 
         if(result.isSuccessful) {
             result.body()?.let {
+                val cate1List = it.data.filter { it.category == "CATEGORY1" }.reversed()
+                val cate2List = it.data.filter { it.category == "CATEGORY2" }.reversed()
+                val cate3List = it.data.filter { it.category == "CATEGORY3" }.reversed()
 
+                _settingCate1TaskList.emit(cate1List)
+                _settingCate2TaskList.emit(cate2List)
+                _settingCate3TaskList.emit(cate3List)
             }
         }
     }
@@ -112,6 +129,18 @@ class HomeViewModel(
             completed = false,
             subTasks = mutableListOf()
         )
+
+        val categoryKey = when(categoryIdx) {
+            0 -> "CATEGORY1"
+            1 -> "CATEGORY2"
+            else -> "CATEGORY3"
+        }
+
+        taskRepository.addMainTask(9, AddMainTaskRequest(
+            taskContent = mainTaskContent,
+            category = categoryKey,
+            taskDate = "2025-05-22T00:00:01.0Z"
+        ))
 
         when(categoryIdx) {
             0 -> cate1TaskList.add(newMainTask)
@@ -135,6 +164,10 @@ class HomeViewModel(
             else -> cate3TaskList
         }
 
+        taskRepository.addSubTask(9, (mainTaskIdx+1).toLong(), AddSubTaskRequest(
+            content = subTaskContent
+        ))
+
         val newSubTask = SubTaskData(
             content = subTaskContent,
             completed = false
@@ -142,13 +175,15 @@ class HomeViewModel(
         val newSubTaskList = originalListValue[mainTaskIdx].subTasks
         newSubTaskList?.add(newSubTask)
 
+        taskRepository.addSubTask(9, mainTaskIdx.toLong(), AddSubTaskRequest(
+            content = subTaskContent,
+        ))
+
         when(categoryIdx) {
             0 -> cate1TaskList[mainTaskIdx].subTasks = newSubTaskList
             1 -> cate2TaskList[mainTaskIdx].subTasks = newSubTaskList
             else -> cate3TaskList[mainTaskIdx].subTasks = newSubTaskList
         }
-
-        //TODO 서버연결 후 서브테스크 내용 보내기
     }
 
     fun checkMainTask(categoryIdx: Int, mainTaskIdx: Int, checked: Boolean) = viewModelScope.launch {
