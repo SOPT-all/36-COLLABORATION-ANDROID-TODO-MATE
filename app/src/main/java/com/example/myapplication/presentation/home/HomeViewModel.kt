@@ -5,13 +5,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.remote.model.response.MainTaskData
 import com.example.myapplication.data.remote.model.response.SubTaskData
-import com.example.myapplication.domain.repository.DummyRepository
+import com.example.myapplication.domain.repository.TaskRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
-    private val repository: DummyRepository
+    private val taskRepository: TaskRepository,
 ) : ViewModel() {
     private val _dummyData = MutableStateFlow("")
     val dummyData: MutableStateFlow<String> get() = _dummyData
@@ -96,8 +96,14 @@ class HomeViewModel(
     }
 
 
-    fun getCategoryTaskList() = viewModelScope.launch {
-        //TODO 서버연결 후 테스크 내용들 받고 분류
+    fun getCategoryTaskList(date: String) = viewModelScope.launch {
+        val result = taskRepository.getDetailTask(9, date)
+
+        if(result.isSuccessful) {
+            result.body()?.let {
+
+            }
+        }
     }
 
     fun addMainTask(mainTaskContent: String, categoryIdx: Int) = viewModelScope.launch {

@@ -1,7 +1,7 @@
 package com.example.myapplication.data.interceptor
 
 import com.example.myapplication.BuildConfig
-import com.example.myapplication.data.service.DummyService
+import com.example.myapplication.data.service.TaskService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -32,7 +32,7 @@ object ApiFactory {
 }
 
 object ServicePool {
-    val dummyService: DummyService by lazy {
-        ApiFactory.create<DummyService>()
+    val taskService: TaskService by lazy {
+        ApiFactory.create<TaskService>()
     }
 }
