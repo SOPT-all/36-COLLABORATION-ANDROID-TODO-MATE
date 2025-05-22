@@ -150,7 +150,7 @@ fun HomeScreen(
                 .background(color = Color.White)
         ) {
             item {
-                CalenderScreen()
+                CalenderScreen(viewModel)
             }
 
             item {

@@ -30,6 +30,7 @@ import com.example.myapplication.ui.theme.GreenCategory1
 import com.example.myapplication.ui.theme.Grey10
 import com.example.myapplication.ui.theme.LocalTodomateTypographyProvider
 import com.example.myapplication.ui.theme.PurpleCategory2
+import kotlinx.coroutines.delay
 
 @Composable
 fun CategoryItem(categoryIdx: Int, viewModel: HomeViewModel) {
@@ -57,6 +58,9 @@ fun CategoryItem(categoryIdx: Int, viewModel: HomeViewModel) {
 
     LaunchedEffect(Unit) {
         viewModel.settingCate1TaskList.collect {
+            cateList.clear()
+            delay(100)
+
             if(it.isNotEmpty()) {
                 if(it[0].category == categoryKey) {
                     it.forEach {
@@ -69,6 +73,9 @@ fun CategoryItem(categoryIdx: Int, viewModel: HomeViewModel) {
 
     LaunchedEffect(Unit) {
         viewModel.settingCate2TaskList.collect {
+            cateList.clear()
+            delay(100)
+
             if(it.isNotEmpty()) {
                 if(it[0].category == categoryKey) {
                     it.forEach {
@@ -81,6 +88,9 @@ fun CategoryItem(categoryIdx: Int, viewModel: HomeViewModel) {
 
     LaunchedEffect(Unit) {
         viewModel.settingCate3TaskList.collect {
+            cateList.clear()
+            delay(100)
+
             if(it.isNotEmpty()) {
                 if(it[0].category == categoryKey) {
                     it.forEach {

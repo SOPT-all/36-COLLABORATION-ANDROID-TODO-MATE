@@ -15,11 +15,8 @@ import kotlinx.coroutines.launch
 class HomeViewModel(
     private val taskRepository: TaskRepository,
 ) : ViewModel() {
-    private val _dummyData = MutableStateFlow("")
-    val dummyData: MutableStateFlow<String> get() = _dummyData
 
-    private val _localData = MutableStateFlow("")
-    val localData: MutableStateFlow<String> get() = _localData
+    var selectedDate = "2025-05-22"
 
 
     private val _focusOnTask = MutableSharedFlow<Triple<Int, Int, Int>>()
@@ -108,7 +105,8 @@ class HomeViewModel(
 
 
     fun getCategoryTaskList(date: String) = viewModelScope.launch {
-        val result = taskRepository.getDetailTask(9, date)
+        val result = taskRepository.getDetailTask(8, date)
+        selectedDate = date
 
         if(result.isSuccessful) {
             result.body()?.let {
@@ -136,10 +134,10 @@ class HomeViewModel(
             else -> "CATEGORY3"
         }
 
-        taskRepository.addMainTask(9, AddMainTaskRequest(
+        taskRepository.addMainTask(8, AddMainTaskRequest(
             taskContent = mainTaskContent,
             category = categoryKey,
-            taskDate = "2025-05-22T00:00:01.0Z"
+            taskDate = "${selectedDate}T00:00:01.0Z"
         ))
 
         when(categoryIdx) {
@@ -164,7 +162,7 @@ class HomeViewModel(
             else -> cate3TaskList
         }
 
-        taskRepository.addSubTask(9, (mainTaskIdx+1).toLong(), AddSubTaskRequest(
+        taskRepository.addSubTask(8, mainTaskIdx.toLong(), AddSubTaskRequest(
             content = subTaskContent
         ))
 
@@ -175,7 +173,7 @@ class HomeViewModel(
         val newSubTaskList = originalListValue[mainTaskIdx].subTasks
         newSubTaskList?.add(newSubTask)
 
-        taskRepository.addSubTask(9, mainTaskIdx.toLong(), AddSubTaskRequest(
+        taskRepository.addSubTask(8, mainTaskIdx.toLong(), AddSubTaskRequest(
             content = subTaskContent,
         ))
 

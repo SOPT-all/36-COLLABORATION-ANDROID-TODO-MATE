@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -14,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.R
+import com.example.myapplication.presentation.home.HomeViewModel
 import com.example.myapplication.presentation.home.calender.component.CalendarTitleComponent
 import com.example.myapplication.presentation.home.calender.component.DayItemComponent
 import com.example.myapplication.presentation.home.profile.PeopleBoxItemComponent
@@ -24,6 +26,7 @@ import java.time.LocalDate
 // TODO: 파일명 수정 (CalenderScreen -> CalendarScreen)
 @Composable
 fun CalenderScreen(
+    homeViewModel: HomeViewModel,
     viewModel: CalendarViewModel = viewModel()
 ) {
     val calendarState by viewModel.calendarState.collectAsState()
@@ -34,6 +37,24 @@ fun CalenderScreen(
 
     val selectedDate by viewModel.selectedDate.collectAsState()
     val today = remember { LocalDate.now() }
+
+    LaunchedEffect(selectedDate) {
+        if(selectedDate == null) return@LaunchedEffect
+
+        var month = selectedDate?.monthValue.toString()
+        var day = selectedDate?.dayOfMonth.toString()
+
+        if(selectedDate?.monthValue?.toString()?.length == 1) {
+            month = "0$month"
+        }
+
+        if(selectedDate?.dayOfMonth.toString().length == 1) {
+            day = "0$day"
+        }
+
+        val convertedDateString = "${selectedDate?.year}-${month}-${day}"
+        homeViewModel.getCategoryTaskList(convertedDateString)
+    }
 
     Column(
         modifier = Modifier
@@ -101,5 +122,5 @@ fun DayOfWeek.toWeekday(): Weekday = when (this) {
 @Preview
 @Composable
 private fun PreviewCalendarScreen() {
-    CalenderScreen()
+//    CalenderScreen()
 }
