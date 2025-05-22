@@ -23,6 +23,9 @@ class HomeViewModel(
     private val _focusOnTask = MutableSharedFlow<Triple<Int, Int, Int>>()
     val focusOnTask: MutableSharedFlow<Triple<Int, Int, Int>> get() = _focusOnTask
 
+    private val _keyboardVisible = MutableSharedFlow<Boolean>()
+    val keyboardVisible: MutableSharedFlow<Boolean> get() = _keyboardVisible
+
     private val _onRoutineClick = MutableSharedFlow<Pair<Int, Int>>()
     val onRoutineClick: MutableSharedFlow<Pair<Int, Int>> get() = _onRoutineClick
 
@@ -258,6 +261,10 @@ class HomeViewModel(
             1 -> _cate2TaskBlank.emit(taskIsBlank)
             else -> _cate3TaskBlank.emit(taskIsBlank)
         }
+    }
+
+    fun keyBoardVisible(visible: Boolean) = viewModelScope.launch {
+        _keyboardVisible.emit(visible)
     }
 
     fun focusOnTask(categoryIdx: Int, mainTaskIdx: Int, subTaskIdx: Int = 0) = viewModelScope.launch {
