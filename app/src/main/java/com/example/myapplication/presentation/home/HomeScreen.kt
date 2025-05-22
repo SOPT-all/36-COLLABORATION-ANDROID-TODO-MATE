@@ -1,11 +1,14 @@
 package com.example.myapplication.presentation.home
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -35,6 +38,7 @@ import com.example.myapplication.presentation.home.importance.ImportanceScreen
 import com.example.myapplication.presentation.home.routine.RoutineScreen
 import com.example.myapplication.presentation.home.toolBox.ToolBarScreen
 import com.example.myapplication.presentation.main.MainActivity
+import com.example.myapplication.presentation.main.component.MainBottomBar
 import com.example.myapplication.presentation.util.compose.addFocusCleaner
 import com.example.myapplication.presentation.util.compose.findActivity
 import com.example.myapplication.presentation.util.keyboard.KeyboardVisibilityUtils
@@ -123,12 +127,16 @@ fun HomeScreen(
             targeted = true
             showRoutineLayout = false
             showImportanceLayout = false
+
+            viewModel.keyBoardVisible(true)
         },
         onHideKeyboard = {
             focusManager.clearFocus()
             if(!showRoutineLayout && !showImportanceLayout) {
                 targeted = false
             }
+
+            viewModel.keyBoardVisible(false)
         }
     )
 
@@ -136,7 +144,6 @@ fun HomeScreen(
         modifier = modifier
             .fillMaxSize()
             .background(color = Color.White)
-            .padding(innerPaddingValues)
             .addFocusCleaner(focusManager)
     ) {
         HeaderComponent()
