@@ -125,6 +125,34 @@ fun MainTaskItem(
 //        }
 //    }
 
+
+    val categoryKey = when(categoryIdx) {
+        0 -> "CATEGORY1"
+        1 -> "CATEGORY2"
+        else -> "CATEGORY3"
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.settingCate1TaskList.collect {
+            if(it.isNotEmpty()) {
+                if(it[0].category == categoryKey) {
+                    if(!it[0].subTasks.isNullOrEmpty()) {
+                        if(it[0].mainTaskId == mainTaskIdx.toLong()) {
+                            it.forEach {
+                                it.subTasks?.forEach {
+                                    subCateList.add(it.content ?: "")
+                                }
+                            }
+
+                            Log.d("Logd", "subCateList: $subCateList")
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
     // check collect
     LaunchedEffect(Unit) {
         viewModel.cate1MainTaskChecked.collect {
@@ -201,7 +229,7 @@ fun MainTaskItem(
             Spacer(modifier = Modifier.width(8.dp))
 
             BasicTextField(
-                value = cateValue,
+                value = if(cateName.isEmpty()) cateValue else cateName,
                 onValueChange = { cateValue = it },
                 enabled = cateName.isEmpty(),
                 singleLine = true,
@@ -216,7 +244,11 @@ fun MainTaskItem(
                         colors = TextFieldDefaults.colors(
                             unfocusedIndicatorColor =
                                 if (focusState || cateValue.isEmpty()) {
-                                    categoryColor
+                                    if(cateName.isNotEmpty()) {
+                                        Color.Transparent
+                                    } else {
+                                        categoryColor
+                                    }
                                 } else {
                                     Color.Transparent
                                 }

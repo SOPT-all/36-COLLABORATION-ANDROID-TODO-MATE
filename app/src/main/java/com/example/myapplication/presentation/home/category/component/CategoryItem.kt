@@ -49,6 +49,48 @@ fun CategoryItem(categoryIdx: Int, viewModel: HomeViewModel) {
         else -> BlueCategory3
     }
 
+    val categoryKey = when(categoryIdx) {
+        0 -> "CATEGORY1"
+        1 -> "CATEGORY2"
+        else -> "CATEGORY3"
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.settingCate1TaskList.collect {
+            if(it.isNotEmpty()) {
+                if(it[0].category == categoryKey) {
+                    it.forEach {
+                        cateList.add(it.taskContent ?: "")
+                    }
+                }
+            }
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.settingCate2TaskList.collect {
+            if(it.isNotEmpty()) {
+                if(it[0].category == categoryKey) {
+                    it.forEach {
+                        cateList.add(it.taskContent ?: "")
+                    }
+                }
+            }
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.settingCate3TaskList.collect {
+            if(it.isNotEmpty()) {
+                if(it[0].category == categoryKey) {
+                    it.forEach {
+                        cateList.add(it.taskContent ?: "")
+                    }
+                }
+            }
+        }
+    }
+
     Row (
         modifier = Modifier
             .width(126.dp)

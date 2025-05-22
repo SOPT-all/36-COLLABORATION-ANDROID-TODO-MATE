@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -65,6 +66,10 @@ fun HomeScreen(
     var targetSubTaskIdx by remember { mutableIntStateOf(-1) }
 
     LaunchedEffect(Unit) {
+        viewModel.getCategoryTaskList("2025-05-22")
+    }
+
+    LaunchedEffect(Unit) {
         viewModel.focusOnTask.collect {
             targetCategoryIdx = it.first
             targetMainTaskIdx = it.second
@@ -114,8 +119,6 @@ fun HomeScreen(
             showRoutineLayout = false
         }
     }
-
-
 
     keyboardVisibilityUtils = KeyboardVisibilityUtils(
         window = activity.window,

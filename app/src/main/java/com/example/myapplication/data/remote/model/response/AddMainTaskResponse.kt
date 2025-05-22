@@ -1,5 +1,8 @@
 package com.example.myapplication.data.remote.model.response
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class AddMainTaskResponse(
     var mainTaskId: Long? = null,
     var taskContent: String? = null,
