@@ -66,7 +66,7 @@ fun HomeScreen(
     var targetSubTaskIdx by remember { mutableIntStateOf(-1) }
 
     LaunchedEffect(Unit) {
-        viewModel.getCategoryTaskList("2025-05-22")
+        viewModel.getCategoryTaskList("2025-05-23")
     }
 
     LaunchedEffect(Unit) {

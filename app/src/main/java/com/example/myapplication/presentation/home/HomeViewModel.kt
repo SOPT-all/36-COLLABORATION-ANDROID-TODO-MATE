@@ -16,7 +16,7 @@ class HomeViewModel(
     private val taskRepository: TaskRepository,
 ) : ViewModel() {
 
-    var selectedDate = "2025-05-22"
+    var selectedDate = "2025-05-23"
 
 
     private val _focusOnTask = MutableSharedFlow<Triple<Int, Int, Int>>()
@@ -105,7 +105,7 @@ class HomeViewModel(
 
 
     fun getCategoryTaskList(date: String) = viewModelScope.launch {
-        val result = taskRepository.getDetailTask(8, date)
+        val result = taskRepository.getDetailTask(6, date)
         selectedDate = date
 
         if(result.isSuccessful) {
@@ -134,7 +134,7 @@ class HomeViewModel(
             else -> "CATEGORY3"
         }
 
-        taskRepository.addMainTask(8, AddMainTaskRequest(
+        taskRepository.addMainTask(6, AddMainTaskRequest(
             taskContent = mainTaskContent,
             category = categoryKey,
             taskDate = "${selectedDate}T00:00:01.0Z"
@@ -162,7 +162,7 @@ class HomeViewModel(
             else -> cate3TaskList
         }
 
-        taskRepository.addSubTask(8, mainTaskIdx.toLong(), AddSubTaskRequest(
+        taskRepository.addSubTask(6, mainTaskIdx.toLong(), AddSubTaskRequest(
             content = subTaskContent
         ))
 
@@ -173,7 +173,7 @@ class HomeViewModel(
         val newSubTaskList = originalListValue[mainTaskIdx].subTasks
         newSubTaskList?.add(newSubTask)
 
-        taskRepository.addSubTask(8, mainTaskIdx.toLong(), AddSubTaskRequest(
+        taskRepository.addSubTask(6, mainTaskIdx.toLong(), AddSubTaskRequest(
             content = subTaskContent,
         ))
 
